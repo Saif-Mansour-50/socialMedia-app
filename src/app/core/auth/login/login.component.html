@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-gray-100 flex items-center justify-center p-10">
+  <div class="w-full max-w-6xl grid md:grid-cols-2 gap-16 items-center">
+    <div>
+      <h1 class="text-5xl font-extrabold text-blue-900 mb-6">Route Posts</h1>
+
+      <p class="text-xl text-gray-700 mb-10 leading-relaxed">
+        Connect with friends and the world around you on Route Posts.
+      </p>
+
+      <div class="bg-white border border-blue-200 rounded-2xl shadow-md p-8">
+        <p class="text-xs font-bold tracking-widest text-blue-700 mb-3">ABOUT ROUTE ACADEMY</p>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-4">
+          Egypt's Leading IT Training Center Since 2012
+        </h2>
+
+        <p class="text-gray-600 text-sm leading-relaxed mb-6">
+          Route Academy is the premier IT training center in Egypt, established in 2012. We
+          specialize in delivering high-quality training courses in programming, web development,
+          and application development.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4 text-center">
+          <div class="border border-blue-200 rounded-xl p-4">
+            <p class="text-blue-800 font-bold text-lg">2012</p>
+            <p class="text-xs text-gray-500">FOUNDED</p>
+          </div>
+
+          <div class="border border-blue-200 rounded-xl p-4">
+            <p class="text-blue-800 font-bold text-lg">40K+</p>
+            <p class="text-xs text-gray-500">GRADUATES</p>
+          </div>
+
+          <div class="border border-blue-200 rounded-xl p-4">
+            <p class="text-blue-800 font-bold text-lg">50+</p>
+            <p class="text-xs text-gray-500">PARTNER COMPANIES</p>
+          </div>
+
+          <div class="border border-blue-200 rounded-xl p-4 col-span-1">
+            <p class="text-blue-800 font-bold text-lg">5</p>
+            <p class="text-xs text-gray-500">BRANCHES</p>
+          </div>
+
+          <div class="border border-blue-200 rounded-xl p-4 col-span-2">
+            <p class="text-blue-800 font-bold text-lg">20</p>
+            <p class="text-xs text-gray-500">DIPLOMAS AVAILABLE</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl p-10">
+      <div class="flex bg-gray-200 rounded-xl p-1 mb-6">
+        <button
+          class="flex-1 py-2 rounded-lg bg-white shadow text-blue-800 font-bold cursor-pointer"
+        >
+          Login
+        </button>
+        <button
+          routerLink="/register"
+          class="flex-1 py-2 rounded-lg text-gray-600 font-bold cursor-pointer hover:text-black"
+        >
+          Register
+        </button>
+      </div>
+
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Log in to Route Posts</h2>
+
+      <p class="text-gray-500 mb-6 text-sm">Log in and continue your social journey.</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="signIn()" class="space-y-4">
+        <input
+          formControlName="email"
+          type="email"
+          placeholder="Email address"
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <input
+          formControlName="password"
+          type="password"
+          placeholder="Password"
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        @if (loginForm.get('password')?.touched) {
+          @if (loginForm.get('password')?.hasError('required')) {
+            <p class="text-red-700 font-semibold">Password is required.</p>
+          } @else if (loginForm.get('password')?.hasError('pattern')) {
+            <p class="text-red-700 font-semibold">
+              Password must include uppercase, lowercase, number, and special character.
+            </p>
+          }
+        }
+
+        <button
+          type="submit"
+          class="w-full bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 rounded-xl transition duration-300 cursor-pointer"
+        >
+          Log In
+          @if (isLoading) {
+            <span><i class="fa-solid fa-spinner fa-spin"></i></span>
+          }
+        </button>
+        <div class="flex align-middle justify-center">
+          <a
+            class="text-fg-brand font-semibold hover:text-brand-dark hover:underline underline-offset-4 transition-all duration-200 cursor-pointer"
+            >Forgot password?</a
+          >
+        </div>
+        <p class="text-red-600">{{ erorrMsg }}</p>
+      </form>
+    </div>
+  </div>
+</div>

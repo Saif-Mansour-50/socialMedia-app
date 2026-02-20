@@ -1,0 +1,89 @@
+<nav class="bg-neutral-primary w-full z-20 top-0 start-0 border-b border-default">
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <a class="flex items-center space-x-3 rtl:space-x-reverse">
+      <img class="size-10" src="" alt="" />
+      <span class="self-center text-xl text-sky-600 font-bold whitespace-nowrap">Route Posts</span>
+    </a>
+
+    <div>
+      <ul class="flex gap-2">
+        <li>
+          <a
+            routerLinkActiv="bg-white text-blue-700 shadow-sm"
+            class="inline-flex items-center font-bold gap-2 w-full px-3 py-2 rounded transition-all duration-200 hover:bg-neutral-tertiary-medium hover:text-heading bg-white text-heading shadow-sm"
+          >
+            <i class="fa-regular fa-house"></i>
+            Feed
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLinkActive="bg-white text-blue-700 shadow-sm"
+            class="inline-flex items-center font-bold gap-2 w-full px-3 py-2 rounded transition-all duration-200 hover:bg-neutral-tertiary-medium hover:text-heading"
+          >
+            <i class="fa-regular fa-user"></i>
+            Profile
+          </a>
+        </li>
+
+        <li>
+          <a
+            routerLinkActive="bg-white text-blue-700 shadow-sm"
+            routerLink="notifications"
+            class="inline-flex items-center font-bold gap-2 w-full px-3 py-2 rounded transition-all duration-200 hover:bg-neutral-tertiary-medium hover:text-heading"
+          >
+            <i class="fa-regular fa-comment"></i>
+            Notifications
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+      <button
+        id="user-menu-button"
+        data-dropdown-toggle="user-dropdown"
+        data-dropdown-placement="bottom-end"
+        type="button"
+        class="flex items-center gap-3 px-4 py-2 bg-[#f8fafc] hover:bg-[#eef2f7] text-gray-800 text-sm font-medium rounded-full shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-400/30 cursor-pointer"
+      >
+        <img
+          class="w-8 h-8 rounded-full object-cover"
+          src="images/latest-games-9.png"
+          alt="user photo"
+        />
+
+        <span>Saif</span>
+
+        <i class="fa-solid fa-bars text-xs opacity-70"></i>
+      </button>
+
+      <!-- Dropdown menu -->
+      <div
+        class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44 cursor-pointer"
+        id="user-dropdown"
+      >
+        <ul class="p-2 text-sm text-body font-medium" aria-labelledby="user-menu-button">
+          <li>
+            <a
+              href="#"
+              class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+              >profile</a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+              >settings</a
+            >
+          </li>
+        </ul>
+        <div class="px-4 py-3 text-sm border-t border-default">
+          <span (click)="logout()" class="block text-red-700 font-medium">logout</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
