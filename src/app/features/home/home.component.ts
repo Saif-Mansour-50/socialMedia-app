@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
       if (token) {
         let decodedToken = jwtDecode(token);
 
-        console.log('token : ', decodedToken);
+        // console.log('token : ', decodedToken);
       }
     }
   }

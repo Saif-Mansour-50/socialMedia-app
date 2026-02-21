@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FlowbiteService } from '../../../app/core/services/flowbite/flowbite.service';
 import { initFlowbite } from 'flowbite';
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
@@ -10,7 +10,7 @@ import { AuthService } from '../../../app/core/services/authorization/auth.servi
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   constructor(private flowbiteService: FlowbiteService) {}
 
   private readonly authService = inject(AuthService);

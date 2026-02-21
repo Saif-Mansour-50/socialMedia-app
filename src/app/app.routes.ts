@@ -8,6 +8,7 @@ import { NotfoundComponent } from './features/notfound/notfound.component';
 import { NotificationsComponent } from './features/notifications/notifications.component';
 import { authGuard } from './core/guards/auth/auth-guard';
 import { notAuth } from './core/guards/noAuth/no-auth-guard';
+import { ProfileComponent } from './features/profile/profile.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,6 +28,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'notifications', component: NotificationsComponent },
+      { path: 'profile', component: ProfileComponent },
     ],
   },
   { path: '**', component: NotfoundComponent },

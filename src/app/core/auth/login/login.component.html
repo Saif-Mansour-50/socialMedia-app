@@ -69,29 +69,43 @@
       <p class="text-gray-500 mb-6 text-sm">Log in and continue your social journey.</p>
 
       <form [formGroup]="loginForm" (ngSubmit)="signIn()" class="space-y-4">
-        <input
-          formControlName="email"
-          type="email"
-          placeholder="Email address"
-          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div>
+          <input
+            formControlName="email"
+            type="email"
+            placeholder="Email address"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
 
-        <input
-          formControlName="password"
-          type="password"
-          placeholder="Password"
-          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+        <div class="relative">
+          <input
+            formControlName="password"
+            [type]="flag === true ? 'password' : 'text'"
+            placeholder="Password"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-        @if (loginForm.get('password')?.touched) {
-          @if (loginForm.get('password')?.hasError('required')) {
-            <p class="text-red-700 font-semibold">Password is required.</p>
-          } @else if (loginForm.get('password')?.hasError('pattern')) {
-            <p class="text-red-700 font-semibold">
-              Password must include uppercase, lowercase, number, and special character.
-            </p>
+          <span (click)="showPassword()" class="absolute top-0 end-2 translate-y-2 cursor-pointer"
+            ><i
+              class="text-gray-500 fas"
+              [class]="{
+                'fa-eye': flag == true,
+                'fa-eye-slash': flag == false,
+              }"
+            ></i
+          ></span>
+
+          @if (loginForm.get('password')?.touched) {
+            @if (loginForm.get('password')?.hasError('required')) {
+              <p class="text-red-700 font-semibold">Password is required.</p>
+            } @else if (loginForm.get('password')?.hasError('pattern')) {
+              <p class="text-red-700 font-semibold">
+                Password must include uppercase, lowercase, number, and special character.
+              </p>
+            }
           }
-        }
+        </div>
 
         <button
           type="submit"

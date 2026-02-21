@@ -16,6 +16,8 @@ export class LoginComponent {
 
   isLoading: boolean = false;
 
+  flag: boolean = true;
+
   erorrMsg: string = '';
 
   loginForm: FormGroup = new FormGroup({
@@ -47,5 +49,9 @@ export class LoginComponent {
     } else {
       this.loginForm.markAllAsTouched();
     }
+  }
+
+  showPassword(): void {
+    this.flag = !this.flag;
   }
 }
