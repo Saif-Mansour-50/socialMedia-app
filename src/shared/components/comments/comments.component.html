@@ -1,0 +1,25 @@
+@for (comment of commentList; track comment._id) {
+  <section class="p-5 rounded-lg border border-gray-100 bg-gray-50">
+    <div class="p-3 flex justify-between">
+      <div class="flex gap-2.5 items-center">
+        <img class="size-10 rounded-full" [src]="comment.commentCreator.photo" alt="" />
+        <div>
+          <h2 class="font-bold">{{ comment.commentCreator.name }}</h2>
+          <p class="text-gray-500">{{ comment.createdAt }}</p>
+        </div>
+      </div>
+      <div><i class="fa-solid fa-ellipsis cursor-pointer"></i></div>
+    </div>
+
+    <p class="text-gray-600">{{ comment.content }}</p>
+
+    <div class="flex gap-2">
+      <button class="py-3 hover:bg-gray-100 transition font-medium text-gray-600 text-xs">
+        <i class="fa-solid fa-thumbs-up"></i> Like
+      </button>
+      <button class="py-3 hover:bg-gray-100 transition font-medium text-gray-600 text-xs">
+        <i class="fa-regular fa-comment"></i> Reply
+      </button>
+    </div>
+  </section>
+}

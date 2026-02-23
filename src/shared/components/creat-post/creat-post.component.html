@@ -1,0 +1,132 @@
+<div class="bg-gray-100 p-6">
+  <div class="max-w-7xl mx-auto grid grid-cols-12 gap-6">
+    <aside class="col-span-3">
+      <div class="bg-white rounded-2xl shadow-sm p-6 space-y-4 sticky top-6">
+        <h2 class="text-lg font-semibold text-gray-700">Feed</h2>
+
+        <nav class="space-y-2">
+          <button
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 text-blue-600 font-medium"
+          >
+            <i class="fa-solid fa-newspaper"></i>
+            Feed
+          </button>
+
+          <button
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-50 text-blue-600 font-medium"
+          >
+            <i class="fa-solid fa-star"></i>
+            My Posts
+          </button>
+
+          <button
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-600"
+          >
+            <i class="fa-solid fa-users"></i>
+            Community
+          </button>
+
+          <button
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 text-gray-600"
+          >
+            <i class="fa-solid fa-bookmark"></i>
+            Saved
+          </button>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="col-span-6">
+      <div class="bg-white rounded-2xl shadow-sm p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <img src="images/default-profile.png" class="w-12 h-12 rounded-full object-cover" />
+
+          <div>
+            <h3 class="font-semibold text-gray-800">Saif</h3>
+            <span class="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-500"> Public </span>
+          </div>
+        </div>
+
+        <form (submit)="cratPost($event)">
+          <textarea
+            [formControl]="postDesctiption"
+            rows="4"
+            placeholder="What's on your mind, Saif?"
+            class="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+
+          <!-- <div><img src="---selected-pgoto---" alt="" class="" /></div> -->
+          <hr class="my-4" />
+
+          <div class="flex justify-between items-center">
+            <div class="flex gap-6 text-gray-600">
+              <input id="photoInput" type="file" hidden (change)="onFileSelected($event)" />
+
+              <label
+                for="photoInput"
+                class="flex items-center gap-2 hover:text-green-600 text-gray-700 px-4 py-2 rounded-xl cursor-pointer transition"
+              >
+                <i class="fa-regular fa-image"></i>
+                Photo/video
+              </label>
+
+              <button class="flex items-center gap-2 hover:text-yellow-500 cursor-pointer">
+                <i class="fa-regular fa-face-smile"></i>
+                Feeling/activity
+              </button>
+            </div>
+
+            <button
+              class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl shadow-md transition cursor-pointer"
+            >
+              Post
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- <div class="bg-white rounded-2xl shadow-sm p-10 text-center text-gray-500">
+        No posts yet. Be the first one to publish.
+      </div> -->
+    </main>
+
+    <aside class="col-span-3">
+      <div class="bg-white rounded-2xl shadow-sm p-6 sticky top-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="font-semibold text-gray-700">Suggested Friends</h2>
+          <span class="text-sm bg-gray-100 px-2 py-1 rounded-full">5</span>
+        </div>
+
+        <input
+          type="text"
+          placeholder="Search friends..."
+          class="w-full mb-4 px-4 py-2 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <img src="images/default-profile.png" class="w-10 h-10 rounded-full object-cover" />
+
+            <div>
+              <h4 class="text-sm font-semibold text-gray-700">saif</h4>
+              <p class="text-xs text-gray-400">70 followers</p>
+            </div>
+          </div>
+
+          <button
+            class="text-sm px-4 py-1 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200"
+          >
+            Follow
+          </button>
+        </div>
+
+        <button
+          class="w-full mt-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium"
+        >
+          View more
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>

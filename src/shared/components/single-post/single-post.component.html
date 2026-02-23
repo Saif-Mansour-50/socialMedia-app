@@ -1,0 +1,52 @@
+@for (post of postList; track $index) {
+  <div
+    class="max-w-2xl mx-auto mb-7 bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden"
+  >
+    <div class="flex items-center justify-between p-4">
+      <div class="flex items-center gap-3">
+        <img [src]="post.user.photo" class="w-10 h-10 rounded-full object-cover" alt="avatar" />
+        <div>
+          <h3 class="font-semibold text-gray-800">{{ post.user.name }}</h3>
+          <p class="text-sm text-gray-500">{{ post.timeAgo }}</p>
+        </div>
+      </div>
+
+      <button class="text-gray-400 hover:text-gray-600 text-xl">...</button>
+    </div>
+
+    <div class="px-4 pb-3">
+      <p class="text-gray-700">{{ post.body }}</p>
+    </div>
+
+    <div class="w-full">
+      <img [src]="post.image" class="w-full h100 object-cover" alt="post image" />
+    </div>
+
+    <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500 border-t">
+      <span> {{ post.likesCount }} likes </span>
+      <div class="flex gap-4">
+        <span>{{ post.sharesCount }} sheare</span>
+        <span> {{ post.commentsCount }} comments</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 border-t">
+      <button class="py-3 hover:bg-gray-100 transition font-medium text-gray-600">
+        <i class="fa-solid fa-thumbs-up"></i> Like
+      </button>
+      <button
+        #showcomments
+        class="py-3 hover:bg-gray-100 transition font-medium text-gray-600 cursor-pointer"
+      >
+        <i class="fa-regular fa-comment"></i> Comment
+      </button>
+      <button class="py-3 hover:bg-gray-100 transition font-medium text-gray-600">
+        <i class="fa-solid fa-share-nodes"></i> Share
+      </button>
+    </div>
+
+    @defer (on interaction(showcomments)) {
+      <app-comments [postId]="post._id"></app-comments>
+    }
+  </div>
+}
