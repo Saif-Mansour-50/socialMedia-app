@@ -1,4 +1,4 @@
-@for (post of postList; track $index) {
+@if (post) {
   <div
     class="max-w-2xl mx-auto mb-7 bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden"
   >
@@ -18,7 +18,7 @@
       <p class="text-gray-700">{{ post.body }}</p>
     </div>
 
-    <div class="w-full cursor-pointer" [routerLink]="['/post-details', post._id]">
+    <div class="w-full cursor-pointer">
       <img [src]="post.image" class="w-full h100 object-cover" alt="post image" />
     </div>
 
@@ -48,7 +48,7 @@
     @defer (on interaction(showcomments)) {
       <app-comments [postId]="post._id"></app-comments>
       <div class="">
-        <form (submit)="creatComment($event, post._id)">
+        <form>
           <label for="chat" class="sr-only">Your message</label>
           <div class="flex items-center px-3 py-2 rounded-base bg-neutral-secondary-soft">
             <button
@@ -103,7 +103,6 @@
               <span class="sr-only">Add emoji</span>
             </button>
             <textarea
-              [formControl]="commentValue"
               id="chat"
               rows="1"
               class="mx-4 bg-neutral-primary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 placeholder:text-body"
