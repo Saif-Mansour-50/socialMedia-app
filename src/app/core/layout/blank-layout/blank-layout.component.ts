@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { NavbarComponent } from '../../../../shared/components/navbar/navbar.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-blank-layout',
-  imports: [NavbarComponent, RouterOutlet],
+  imports: [RouterOutlet],
   templateUrl: './blank-layout.component.html',
   styleUrl: './blank-layout.component.css',
 })
