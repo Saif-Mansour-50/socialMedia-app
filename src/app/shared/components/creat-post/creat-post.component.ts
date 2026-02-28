@@ -20,6 +20,7 @@ export class CreatPostComponent {
 
   upLoadedFile: any;
   userData!: User;
+  imagePreview: any;
 
   ngOnInit(): void {
     const user = localStorage.getItem('userData');
@@ -39,6 +40,7 @@ export class CreatPostComponent {
 
     if (input.files) {
       this.upLoadedFile = input.files[0];
+      this.imagePreview = URL.createObjectURL(this.upLoadedFile);
     }
   }
 
@@ -59,7 +61,6 @@ export class CreatPostComponent {
         next: () => {
           this.postsService.getAllPosts();
           this.isSubmitted.set(false);
-
           this.form.reset();
         },
         error: (err) => {

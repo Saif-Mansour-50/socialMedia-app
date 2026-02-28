@@ -23,6 +23,16 @@
 
     <hr class="my-4" />
 
+    @if (imagePreview) {
+      <div class="my-2">
+        <img
+          [src]="imagePreview"
+          class="w-full max-h-80 object-cover rounded-xl border"
+          alt="Preview"
+        />
+      </div>
+    }
+
     <div class="flex justify-between items-center">
       <div class="flex gap-6 text-gray-600">
         <input
@@ -31,6 +41,7 @@
           id="photoInput"
           type="file"
           hidden
+          accept="image/*"
         />
         <label
           for="photoInput"
