@@ -1,7 +1,6 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { CommentsService } from '../../../app/core/services/comments/comments.service';
-import { log } from 'console';
-import { Icomment } from '../../../app/core/models/Icomment/icomment.interface';
+import { CommentsService } from '../../../core/services/comments/comments.service';
+import { Icomment } from '../../../core/models/Icomment/icomment.interface';
 
 @Component({
   selector: 'app-comments',

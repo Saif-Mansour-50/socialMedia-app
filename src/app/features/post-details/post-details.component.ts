@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { log } from 'console';
+
+import { CommentsComponent } from '../../shared/components/comments/comments.component';
 import { PostsService } from '../../core/services/posts/posts.service';
 import { Ipost } from '../../core/models/Ipost/ipost.interface';
-import { CommentsComponent } from '../../../shared/components/comments/comments.component';
 
 @Component({
   selector: 'app-post-details',
