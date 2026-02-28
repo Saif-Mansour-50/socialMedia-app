@@ -38,10 +38,32 @@
         >
           <i class="fa-regular fa-image"></i> Photo/video
         </label>
-        <button type="button" class="flex items-center gap-2 hover:text-yellow-500 cursor-pointer">
-          <i class="fa-regular fa-face-smile"></i> Feeling/activity
+
+        <button
+          id="emoji-menu"
+          data-dropdown-toggle="emoji-dropdown"
+          data-dropdown-placement="bottom-end"
+          type="button"
+          class="flex items-center gap-2 hover:text-yellow-500 cursor-pointer"
+        >
+          <i class="fa-regular fa-face-smile"></i>
+          Feeling/activity
         </button>
+
+        <div
+          class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44"
+          id="emoji-dropdown"
+        >
+          <div aria-labelledby="emoji-menu">
+            <emoji-mart
+              (emojiSelect)="selectEmoji($event)"
+              [isNative]="true"
+              emoji="point_up"
+            ></emoji-mart>
+          </div>
+        </div>
       </div>
+
       <button
         [class.pointer-events-none]="isSubmitted()"
         [class.cursor-not-allowed]="isSubmitted()"

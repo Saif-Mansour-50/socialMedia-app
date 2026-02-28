@@ -30,6 +30,7 @@
     "@angular/platform-browser": "^20.3.0",
     "@angular/platform-server": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@ctrl/ngx-emoji-mart": "^9.3.0",
     "@fortawesome/fontawesome-free": "^7.2.0",
     "@tailwindcss/postcss": "^4.1.18",
     "flowbite": "^4.0.1",
