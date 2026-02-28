@@ -1,9 +1,9 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { Ipost } from '../../../app/core/models/Ipost/ipost.interface';
-import { PostsService } from '../../../app/core/services/posts/posts.service';
+import { Ipost } from '../../../core/models/Ipost/ipost.interface';
+import { PostsService } from '../../../core/services/posts/posts.service';
 import { CommentsComponent } from '../comments/comments.component';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommentsService } from '../../../app/core/services/comments/comments.service';
+import { CommentsService } from '../../../core/services/comments/comments.service';
 
 @Component({
   selector: 'app-single-post',

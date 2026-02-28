@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 
-import { CreatPostComponent } from '../../../shared/components/creat-post/creat-post.component';
+import { CreatPostComponent } from '../../shared/components/creat-post/creat-post.component';
 import { PostsService } from '../../core/services/posts/posts.service';
 import { Ipost } from './../../core/models/Ipost/ipost.interface';
 

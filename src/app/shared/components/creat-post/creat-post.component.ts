@@ -1,4 +1,4 @@
-import { PostsService } from './../../../app/core/services/posts/posts.service';
+import { PostsService } from '../../../core/services/posts/posts.service';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { log } from 'console';

@@ -3,8 +3,8 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { initFlowbite } from 'flowbite';
 
-import { FlowbiteService } from '../../../app/core/services/flowbite/flowbite.service';
-import { AuthService } from '../../../app/core/services/authorization/auth.service';
+import { FlowbiteService } from '../../../core/services/flowbite/flowbite.service';
+import { AuthService } from '../../../core/services/authorization/auth.service';
 
 @Component({
   selector: 'app-navbar',
