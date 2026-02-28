@@ -8,34 +8,34 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class PostsService {
-  headerToken: any;
+  // headerToken: any;
 
-  constructor() {
-    this.setHeaderToken();
-  }
-  private readonly id = inject(PLATFORM_ID);
+  // constructor() {
+  //   this.setHeaderToken();
+  // }
+  // private readonly id = inject(PLATFORM_ID);
 
-  setHeaderToken() {
-    if (isPlatformBrowser(this.id)) {
-      this.headerToken = {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      };
-    }
-  }
+  // setHeaderToken() {
+  //   if (isPlatformBrowser(this.id)) {
+  //     this.headerToken = {
+  //       headers: {
+  //         authorization: `Bearer ${localStorage.getItem('token')}`,
+  //       },
+  //     };
+  //   }
+  // }
 
   private readonly httpClient = inject(HttpClient);
 
   getAllPosts(): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/posts`, this.headerToken);
+    return this.httpClient.get(`${environment.baseUrl}/posts`);
   }
 
   createPost(data: any): Observable<any> {
-    return this.httpClient.post(`${environment.baseUrl}/posts`, data, this.headerToken);
+    return this.httpClient.post(`${environment.baseUrl}/posts`, data);
   }
 
   getSinglePost(postId: any): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/posts/${postId}`, this.headerToken);
+    return this.httpClient.get(`${environment.baseUrl}/posts/${postId}`);
   }
 }

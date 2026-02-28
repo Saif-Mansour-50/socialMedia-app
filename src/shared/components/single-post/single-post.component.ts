@@ -3,13 +3,11 @@ import { Ipost } from '../../../app/core/models/Ipost/ipost.interface';
 import { PostsService } from '../../../app/core/services/posts/posts.service';
 import { CommentsComponent } from '../comments/comments.component';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { log } from 'console';
 import { CommentsService } from '../../../app/core/services/comments/comments.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-single-post',
-  imports: [CommentsComponent, ReactiveFormsModule, RouterLink],
+  imports: [CommentsComponent, ReactiveFormsModule],
   templateUrl: './single-post.component.html',
   styleUrl: './single-post.component.css',
 })
@@ -73,6 +71,8 @@ export class SinglePostComponent implements OnInit {
         next: (res) => {
           console.log(res);
           if (res.success) {
+            this.commentValue.reset();
+
             // clear input value , getPostComments
           }
         },

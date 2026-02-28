@@ -2,10 +2,11 @@ import { PostsService } from './../../../app/core/services/posts/posts.service';
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { log } from 'console';
+import { SinglePostComponent } from '../single-post/single-post.component';
 
 @Component({
   selector: 'app-creat-post',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, SinglePostComponent],
   templateUrl: './creat-post.component.html',
   styleUrl: './creat-post.component.css',
 })

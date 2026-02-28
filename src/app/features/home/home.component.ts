@@ -3,12 +3,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { CreatPostComponent } from '../../../shared/components/creat-post/creat-post.component';
-import { SinglePostComponent } from '../../../shared/components/single-post/single-post.component';
 import { PostsService } from '../../core/services/posts/posts.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CreatPostComponent, SinglePostComponent],
+  imports: [CreatPostComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })

@@ -8,33 +8,30 @@ import { environment } from '../../../../environments/environment.development';
   providedIn: 'root',
 })
 export class CommentsService {
-  headerToken: any;
+  // headerToken: any;
 
-  constructor() {
-    this.setHeaderToken();
-  }
+  // constructor() {
+  //   this.setHeaderToken();
+  // }
+  // private readonly id = inject(PLATFORM_ID);
+
+  // setHeaderToken() {
+  //   if (isPlatformBrowser(this.id)) {
+  //     this.headerToken = {
+  //       headers: {
+  //         authorization: `Bearer ${localStorage.getItem('token')}`,
+  //       },
+  //     };
+  //   }
+  // }
+
   private readonly httpClient = inject(HttpClient);
-  private readonly id = inject(PLATFORM_ID);
-
-  setHeaderToken() {
-    if (isPlatformBrowser(this.id)) {
-      this.headerToken = {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      };
-    }
-  }
 
   getPostComments(postId: any): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/posts/${postId}/comments`, this.headerToken);
+    return this.httpClient.get(`${environment.baseUrl}/posts/${postId}/comments`);
   }
 
   createComment(data: any, postId: any): Observable<any> {
-    return this.httpClient.post(
-      `${environment.baseUrl}/posts/${postId}/comments`,
-      data,
-      this.headerToken,
-    );
+    return this.httpClient.post(`${environment.baseUrl}/posts/${postId}/comments`, data);
   }
 }
