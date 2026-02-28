@@ -1,9 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
-
 import { environment } from '../../../../environments/environment.development';
+import { Ipost } from '../../models/Ipost/ipost.interface';
+import { ServerResponse } from '../../models/http';
 
 @Injectable({
   providedIn: 'root',
@@ -11,15 +11,61 @@ import { environment } from '../../../../environments/environment.development';
 export class PostsService {
   private readonly httpClient = inject(HttpClient);
 
-  getAllPosts(): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/posts`);
+  isLoading = signal(false);
+
+  postList = signal<Ipost[]>([]);
+
+  getAllPosts() {
+    return this.httpClient.get<any>(`${environment.baseUrl}/posts`).subscribe({
+      next: (res) => {
+        const response = res.data.posts.map((post: Ipost) => ({
+          ...post,
+          timeAgo: this.getTimeAgo(post.createdAt),
+        }));
+
+        this.postList.set(response);
+        this.isLoading.set(false);
+      },
+    });
   }
 
-  createPost(data: any): Observable<any> {
-    return this.httpClient.post(`${environment.baseUrl}/posts`, data);
+  createPost(data: FormData) {
+    return this.httpClient.post<ServerResponse<{ post: Ipost }>>(
+      `${environment.baseUrl}/posts`,
+      data,
+    );
   }
 
-  getSinglePost(postId: any): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/posts/${postId}`);
+  getSinglePost(postId: any) {
+    return this.httpClient.get<any>(`${environment.baseUrl}/posts/${postId}`);
+  }
+
+  getTimeAgo(dateString: string): string {
+    let different = Date.now() - new Date(dateString).getTime();
+
+    let day = 1000 * 60 * 60 * 24;
+    let hour = 1000 * 60 * 60;
+    let minute = 1000 * 60;
+
+    if (different >= day) {
+      return `${Math.floor(different / day)}d`;
+    }
+
+    if (different >= hour) {
+      return `${Math.floor(different / hour)}h`;
+    }
+
+    return `${Math.floor(different / minute)}m`;
   }
 }
+
+// export type Post<T> = {
+//   text: string;
+//   body: T;
+// };
+
+// const test1: Post<boolean> = { text: 'test', body: true };
+
+// const test2: Post<number[]> = { text: 'test', body: [1, 2, 3] };
+
+// const test3: Post<object> = { text: 'test', body: { name: 'saif' } };

@@ -1,19 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { CreatPostComponent } from '../../shared/components/creat-post/creat-post.component';
 import { PostsService } from '../../core/services/posts/posts.service';
-import { Ipost } from './../../core/models/Ipost/ipost.interface';
+import { SinglePostComponent } from '../../shared/components/single-post/single-post.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CreatPostComponent],
+  imports: [CreatPostComponent, SinglePostComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
-export class HomeComponent implements OnInit {
-  private readonly postsService = inject(PostsService);
-
-  postList: Ipost[] = [];
-
-  ngOnInit(): void {}
+export class HomeComponent {
+  protected readonly postsService = inject(PostsService);
 }

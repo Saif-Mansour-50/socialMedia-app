@@ -1,9 +1,8 @@
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
 import { Component, inject, OnInit } from '@angular/core';
 
-import { jwtDecode } from 'jwt-decode';
-
 import { AuthService } from '../../../core/services/authorization/auth.service';
+import { User } from '../../../core/models/Icomment/icomment.interface';
 
 @Component({
   selector: 'app-navbar',
@@ -14,13 +13,13 @@ import { AuthService } from '../../../core/services/authorization/auth.service';
 export class NavbarComponent implements OnInit {
   private readonly authService = inject(AuthService);
 
-  userData: any = null;
+  userData!: User;
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      this.userData = decodedToken;
+    const user = localStorage.getItem('userData');
+
+    if (user) {
+      this.userData = JSON.parse(user);
     }
   }
 

@@ -1,7 +1,7 @@
 <nav class="bg-neutral-primary w-full z-20 top-0 start-0 border-b border-default">
   <div class="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a routerLink="/home" class="flex items-center space-x-3 rtl:space-x-reverse">
-      <img class="size-10 rounded-2xl" src="images/route.png" alt="" />
+      <img width="40" height="20" class="rounded-2xl" src="images/route.png" alt="Logo" />
       <span class="self-center text-xl text-sky-600 font-bold whitespace-nowrap">Route Posts</span>
     </a>
     <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -12,13 +12,9 @@
         type="button"
         class="flex items-center gap-3 px-4 py-2 bg-[#f8fafc] hover:bg-[#eef2f7] text-gray-800 text-sm font-medium rounded-full shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-400/30 cursor-pointer"
       >
-        <img
-          class="w-8 h-8 rounded-full object-cover"
-          src="images/default-profile.png"
-          alt="user photo"
-        />
+        <img class="w-8 h-8 rounded-full object-cover" [src]="userData.photo" alt="user photo" />
 
-        <span>saif </span>
+        <span>{{ userData.name }} </span>
 
         <i class="fa-solid fa-bars text-xs opacity-70"></i>
       </button>

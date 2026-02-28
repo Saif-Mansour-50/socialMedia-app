@@ -1,6 +1,7 @@
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+
 import { AuthService } from '../../../core/services/authorization/auth.service';
 
 @Component({
@@ -11,18 +12,15 @@ import { AuthService } from '../../../core/services/authorization/auth.service';
 })
 export class LoginComponent {
   private readonly authService = inject(AuthService);
-
   private readonly router = inject(Router);
 
-  isLoading: boolean = false;
+  isLoading = false;
+  flag = true;
+  erorrMsg = '';
 
-  flag: boolean = true;
-
-  erorrMsg: string = '';
-
-  loginForm: FormGroup = new FormGroup({
-    email: new FormControl(null, [Validators.required, Validators.email]),
-    password: new FormControl(null, [
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [
       Validators.required,
       Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
     ]),
@@ -34,14 +32,13 @@ export class LoginComponent {
 
       this.authService.signin(this.loginForm.value).subscribe({
         next: (res) => {
-          console.log(res);
           this.router.navigate(['/home']);
           this.isLoading = false;
 
           localStorage.setItem('token', res.data.token);
+          localStorage.setItem('userData', JSON.stringify(res.data.user));
         },
         error: (err) => {
-          console.log(err);
           this.isLoading = false;
           this.erorrMsg = err.error.message;
         },
