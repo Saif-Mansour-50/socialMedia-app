@@ -1,9 +1,8 @@
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
 import { Component, inject, OnInit } from '@angular/core';
 
-import { initFlowbite } from 'flowbite';
+import { jwtDecode } from 'jwt-decode';
 
-import { FlowbiteService } from '../../../core/services/flowbite/flowbite.service';
 import { AuthService } from '../../../core/services/authorization/auth.service';
 
 @Component({
@@ -13,7 +12,6 @@ import { AuthService } from '../../../core/services/authorization/auth.service';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit {
-  private readonly flowbiteService = inject(FlowbiteService);
   private readonly authService = inject(AuthService);
 
   userData: any = null;
@@ -21,12 +19,9 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     const token = localStorage.getItem('token');
     if (token) {
-      this.userData = JSON.parse(token);
+      const decodedToken = jwtDecode(token);
+      this.userData = decodedToken;
     }
-
-    this.flowbiteService.loadFlowbite((flowbite) => {
-      initFlowbite();
-    });
   }
 
   logout() {
