@@ -1,9 +1,10 @@
-import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { FlowbiteService } from '../../../app/core/services/flowbite/flowbite.service';
-import { initFlowbite } from 'flowbite';
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+
+import { initFlowbite } from 'flowbite';
+
+import { FlowbiteService } from '../../../app/core/services/flowbite/flowbite.service';
 import { AuthService } from '../../../app/core/services/authorization/auth.service';
-import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
@@ -12,20 +13,15 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit {
-  constructor(private flowbiteService: FlowbiteService) {}
-
+  private readonly flowbiteService = inject(FlowbiteService);
   private readonly authService = inject(AuthService);
-
-  platformId = inject(PLATFORM_ID);
 
   userData: any = null;
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        this.userData = JSON.parse(token);
-      }
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.userData = JSON.parse(token);
     }
 
     this.flowbiteService.loadFlowbite((flowbite) => {

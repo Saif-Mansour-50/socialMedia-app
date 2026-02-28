@@ -1,22 +1,20 @@
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 import {
-  ApplicationConfig,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
+  ApplicationConfig,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { headerInterceptor } from './core/interceptors/header/header-interceptor';
 import { erorrInterceptor } from './core/interceptors/erorr/erorr-interceptor';
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withFetch(), withInterceptors([headerInterceptor, erorrInterceptor])),
-    provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideClientHydration(withEventReplay()),
   ],
 };
