@@ -16,6 +16,8 @@ export class SinglePostComponent implements OnInit {
   private readonly commentsService = inject(CommentsService);
   protected readonly postsService = inject(PostsService);
 
+  isLoadingMore = false;
+
   commentValue: FormControl = new FormControl(null, [Validators.required]);
 
   ngOnInit(): void {
@@ -45,5 +47,20 @@ export class SinglePostComponent implements OnInit {
         },
       });
     }
+  }
+
+  visibleCount = 5;
+
+  loadMore() {
+    if (this.isLoadingMore) return;
+    this.isLoadingMore = true;
+
+    const total = this.postsService.postList().length;
+    if (this.visibleCount < total) {
+      this.visibleCount += 5;
+    }
+    setTimeout(() => {
+      this.isLoadingMore = false;
+    }, 3000);
   }
 }

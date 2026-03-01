@@ -1,4 +1,4 @@
-@for (post of postsService.postList(); track $index) {
+@for (post of postsService.postList().slice(0, visibleCount); track post._id) {
   <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
     <!-- post header -->
     <div class="flex items-center justify-between p-4">
@@ -91,4 +91,11 @@
       </div>
     }
   </div>
+}
+@if (visibleCount < postsService.postList().length) {
+  @defer (on viewport) {
+    {{ loadMore() }}
+  } @placeholder {
+    <div class="text-center py-6 text-gray-400 text-4xl">Loading more posts...</div>
+  }
 }
