@@ -11,6 +11,7 @@ import { PostDetailsComponent } from './features/post-details/post-details.compo
 import { ProfileComponent } from './features/profile/profile.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { BlankLayoutComponent } from './layouts/blank-layout/blank-layout.component';
+import { DetailsComponent } from './features/details/details.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -32,6 +33,7 @@ export const routes: Routes = [
       { path: 'post-details/:id', component: PostDetailsComponent },
       { path: 'notifications', component: NotificationsComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'details/:id', component: DetailsComponent },
     ],
   },
   { path: '**', component: NotfoundComponent },

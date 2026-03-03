@@ -1,4 +1,4 @@
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, inject, signal } from '@angular/core';
 
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -15,6 +15,10 @@ import { User } from '../../../core/models/Icomment/icomment.interface';
 export class CreatPostComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly postsService = inject(PostsService);
+
+  content: FormControl = new FormControl('');
+
+  privacy: FormControl = new FormControl('public');
 
   isSubmitted = signal(false);
 
@@ -57,11 +61,16 @@ export class CreatPostComponent {
         formData.append('image', this.upLoadedFile);
       }
 
+      if (this.privacy.value) {
+        formData.append('privacy', this.privacy.value);
+      }
+
       this.postsService.createPost(formData).subscribe({
-        next: () => {
+        next: (res) => {
           this.postsService.getAllPosts();
           this.isSubmitted.set(false);
           this.form.reset();
+          this.imagePreview = '';
         },
         error: (err) => {
           this.isSubmitted.set(false);

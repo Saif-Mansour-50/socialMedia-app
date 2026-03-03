@@ -1,27 +1,36 @@
+import { Icomment } from './../../../core/models/Icomment/icomment.interface';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, inject, OnInit } from '@angular/core';
 
 import { CommentsService } from '../../../core/services/comments/comments.service';
 import { PostsService } from '../../../core/services/posts/posts.service';
-import { Ipost } from '../../../core/models/Ipost/ipost.interface';
 import { CommentsComponent } from '../comments/comments.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-single-post',
-  imports: [CommentsComponent, ReactiveFormsModule],
+  imports: [CommentsComponent, ReactiveFormsModule, RouterLink],
   templateUrl: './single-post.component.html',
   styleUrl: './single-post.component.css',
 })
 export class SinglePostComponent implements OnInit {
   private readonly commentsService = inject(CommentsService);
+
   protected readonly postsService = inject(PostsService);
 
   isLoadingMore = false;
 
   commentValue: FormControl = new FormControl(null, [Validators.required]);
 
+  commentList: Icomment[] = [];
+
+  userId: string = '';
+
   ngOnInit(): void {
     this.getAllPosts();
+
+    this.userId = JSON.parse(localStorage.getItem('userData')!)._id;
+    console.log(this.userId);
   }
 
   getAllPosts() {
@@ -40,6 +49,8 @@ export class SinglePostComponent implements OnInit {
         next: (res) => {
           if (res.success) {
             this.commentValue.reset();
+            this.commentList = res.data.comments;
+            console.log('comment', res);
           }
         },
         error: (err) => {
@@ -47,6 +58,18 @@ export class SinglePostComponent implements OnInit {
         },
       });
     }
+  }
+
+  deletePostItem(postId: string): void {
+    this.postsService.deletePost(postId).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.getAllPosts();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 
   visibleCount = 5;
@@ -59,8 +82,8 @@ export class SinglePostComponent implements OnInit {
     if (this.visibleCount < total) {
       this.visibleCount += 5;
     }
-    setTimeout(() => {
-      this.isLoadingMore = false;
-    }, 3000);
+    // setTimeout(() => {
+    //   this.isLoadingMore = false;
+    // }, 2000);
   }
 }

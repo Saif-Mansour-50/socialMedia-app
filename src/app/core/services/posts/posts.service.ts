@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
 import { Ipost } from '../../models/Ipost/ipost.interface';
 import { ServerResponse } from '../../models/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -57,15 +58,8 @@ export class PostsService {
 
     return `${Math.floor(different / minute)}m`;
   }
+
+  deletePost(postId: any): Observable<any> {
+    return this.httpClient.delete(environment.baseUrl + `/posts/${postId}`);
+  }
 }
-
-// export type Post<T> = {
-//   text: string;
-//   body: T;
-// };
-
-// const test1: Post<boolean> = { text: 'test', body: true };
-
-// const test2: Post<number[]> = { text: 'test', body: [1, 2, 3] };
-
-// const test3: Post<object> = { text: 'test', body: { name: 'saif' } };

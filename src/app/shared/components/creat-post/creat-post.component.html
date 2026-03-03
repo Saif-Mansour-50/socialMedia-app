@@ -4,7 +4,14 @@
 
     <div>
       <h3 class="font-semibold text-gray-800">{{ userData.name }}</h3>
-      <span class="text-xs bg-gray-100 px-3 py-1 rounded-full text-gray-500"> Public </span>
+      <select
+        [formControl]="privacy"
+        class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
+      >
+        <option value="public">public</option>
+        <option value="following">followers</option>
+        <option value="only_me">only me</option>
+      </select>
     </div>
   </div>
 

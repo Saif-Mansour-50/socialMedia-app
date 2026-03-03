@@ -3,7 +3,11 @@
     <!-- post header -->
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center gap-3">
-        <img [src]="post.user.photo" class="w-10 h-10 rounded-full object-cover" />
+        <img
+          [src]="post.user.photo"
+          [alt]="post.user.name"
+          class="w-10 h-10 rounded-full object-cover"
+        />
         <div>
           <h3 class="font-semibold text-gray-800">
             {{ post.user.name }}
@@ -12,9 +16,51 @@
             {{ post.timeAgo }}
           </p>
         </div>
+        <div
+          class="p-0 w-fit items-center bg-neutral-secondary-medium text-heading text-sm rounded-base"
+        >
+          <select
+            [disabled]="post.user._id !== userId"
+            class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
+          >
+            <option [selected]="post.privacy === 'public'" value="public">public</option>
+            <option [selected]="post.privacy === 'following'" value="following">followers</option>
+            <option [selected]="post.privacy === 'only_me'" value="only_me">only me</option>
+          </select>
+        </div>
       </div>
 
-      <button class="text-gray-400 hover:text-gray-600 text-xl">...</button>
+      <div class="relative inline-block text-left group">
+        <!-- Button -->
+        <button class="p-2 rounded-full hover:bg-gray-100 transition">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div
+          class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition cursor-pointer"
+        >
+          <ul class="py-2 text-sm">
+            <li>
+              <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Save post
+              </button>
+              @if (post.user._id === userId) {
+                <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                  Edit post
+                </button>
+
+                <button
+                  (click)="deletePostItem(post._id)"
+                  class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer"
+                >
+                  Delete post
+                </button>
+              }
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="px-4 pb-3">
@@ -23,8 +69,8 @@
       </p>
     </div>
 
-    <div class="w-full">
-      <img [src]="post.image" class="w-full max-h-125 object-cover" />
+    <div [routerLink]="['/details', post._id]" class="w-full">
+      <img [src]="post.image" class="w-full max-h-125 object-cover cursor-pointer" />
     </div>
 
     <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500 border-t">
@@ -32,6 +78,12 @@
       <div class="flex gap-4">
         <span>{{ post.sharesCount }} share</span>
         <span>{{ post.commentsCount }} comments</span>
+        <button
+          [routerLink]="['/details', post._id]"
+          class="font-semibold cursor-pointer text-blue-600 hover:underline"
+        >
+          view details
+        </button>
       </div>
     </div>
 
