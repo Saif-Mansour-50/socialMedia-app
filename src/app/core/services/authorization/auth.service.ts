@@ -24,4 +24,8 @@ export class AuthService {
 
     localStorage.removeItem('token');
   }
+
+  changePassword(data: any): Observable<any> {
+    return this.httpClient.patch(environment.baseUrl + '/users/change-password', data);
+  }
 }

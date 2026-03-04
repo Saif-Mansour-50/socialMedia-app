@@ -62,4 +62,12 @@ export class PostsService {
   deletePost(postId: any): Observable<any> {
     return this.httpClient.delete(environment.baseUrl + `/posts/${postId}`);
   }
+
+  getMyProfile(): Observable<any> {
+    return this.httpClient.get(`${environment.baseUrl}/users/profile-data`);
+  }
+
+  getUserPost(userId: any): Observable<any> {
+    return this.httpClient.get(`${environment.baseUrl}/users/${userId}/posts`);
+  }
 }

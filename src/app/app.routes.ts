@@ -12,6 +12,7 @@ import { ProfileComponent } from './features/profile/profile.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { BlankLayoutComponent } from './layouts/blank-layout/blank-layout.component';
 import { DetailsComponent } from './features/details/details.component';
+import { ChangePasswordComponent } from './features/auth/change-password/change-password.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,6 +35,7 @@ export const routes: Routes = [
       { path: 'notifications', component: NotificationsComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'details/:id', component: DetailsComponent },
+      { path: 'changePassword', component: ChangePasswordComponent },
     ],
   },
   { path: '**', component: NotfoundComponent },

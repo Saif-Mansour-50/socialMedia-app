@@ -1,7 +1,11 @@
 <div class="min-h-screen bg-gray-100 p-6">
   <div
-    class="relative h-72 rounded-b-[40px] overflow-hidden bg-gradient-to-r from-[#1e293b] to-[#6b9ecf]"
+    class="relative h-72 rounded-b-[40px] overflow-hidden bg-linear-to-r from-[#1e293b] to-[#6b9ecf]"
   >
+    @if (profileDetails.cover) {
+      <img [src]="profileDetails.cover" class="w-full h-full object-cover" />
+    }
+
     <button
       class="absolute top-6 right-6 bg-slate-800/70 hover:bg-slate-900/80 text-white px-4 py-2 rounded-lg text-sm flex items-center gap-2 backdrop-blur transition"
     >
@@ -16,13 +20,14 @@
         <div class="flex items-center gap-6 flex-1">
           <div class="relative">
             <img
-              src="images/default-profile.png"
+              [src]="profileDetails.photo"
+              [alt]="profileDetails.name"
               class="w-32 h-32 rounded-full border-4 border-white shadow-md object-cover"
             />
           </div>
 
           <div>
-            <h1 class="text-3xl font-bold text-slate-800">Saif</h1>
+            <h1 class="text-3xl font-bold text-slate-800">{{ profileDetails.name }}</h1>
             <p class="text-slate-400 text-lg">@</p>
 
             <span
@@ -35,19 +40,19 @@
         </div>
 
         <div class="grid grid-cols-3 gap-4 w-full lg:w-auto">
-          <div class="stat-box">
-            <p class="stat-title">FOLLOWERS</p>
-            <p class="stat-number">0</p>
+          <div class="stat-box border border-gray-300 bg-white p-4 rounded-2xl">
+            <p class="stat-title text-gray-500 font-semibold">FOLLOWERS</p>
+            <p class="stat-number text-center font-bold">0</p>
           </div>
 
-          <div class="stat-box">
-            <p class="stat-title">FOLLOWING</p>
-            <p class="stat-number">2</p>
+          <div class="stat-box border border-gray-300 bg-white p-4 rounded-2xl">
+            <p class="stat-title text-gray-500 font-semibold">FOLLOWING</p>
+            <p class="stat-number text-center font-bold">{{ profileDetails.followingCount }}</p>
           </div>
 
-          <div class="stat-box">
-            <p class="stat-title">BOOKMARKS</p>
-            <p class="stat-number">0</p>
+          <div class="stat-box border border-gray-300 bg-white p-4 rounded-2xl">
+            <p class="stat-title text-gray-500 font-semibold">BOOKMARKS</p>
+            <p class="stat-number text-center font-bold">{{ profileDetails.bookmarksCount }}</p>
           </div>
         </div>
       </div>
@@ -60,7 +65,7 @@
           <div class="space-y-3 text-slate-600">
             <p class="flex items-center gap-3">
               <i class="fa-regular fa-envelope text-slate-400"></i>
-              saif@gmail.com
+              {{ profileDetails.email }}
             </p>
 
             <p class="flex items-center gap-3">
@@ -72,13 +77,13 @@
 
         <!-- Side Counters -->
         <div class="space-y-6">
-          <div class="side-box">
-            <p class="side-title">MY POSTS</p>
+          <div class="side-box border border-gray-300 bg-white p-4 rounded-2xl">
+            <p class="side- text-blue-600">MY POSTS</p>
             <p class="side-number">0</p>
           </div>
 
-          <div class="side-box">
-            <p class="side-title">SAVED POSTS</p>
+          <div class="side-box border border-gray-300 bg-white p-4 rounded-2xl">
+            <p class="side-title text-blue-600">SAVED POSTS</p>
             <p class="side-number">0</p>
           </div>
         </div>
