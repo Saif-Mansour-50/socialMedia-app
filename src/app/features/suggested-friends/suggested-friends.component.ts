@@ -1,31 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
-
-import { CreatPostComponent } from '../../shared/components/creat-post/creat-post.component';
-import { PostsService } from '../../core/services/posts/posts.service';
-import { SinglePostComponent } from '../../shared/components/single-post/single-post.component';
-import { SuggestedFriends } from '../../core/models/suggestedFriends/suggested-friends.interface';
-import { FriendsService } from '../../core/services/friendsSuggestition/friends.service';
-import { SearchFriendsPipe } from '../../core/pipes/searchFriends/search-friends-pipe';
 import { FormsModule } from '@angular/forms';
-import { SuggestedFriendsComponent } from '../suggested-friends/suggested-friends.component';
-import { RouterLink } from '@angular/router';
-import { AsideFeedComponent } from '../aside-feed/aside-feed.component';
+import { FriendsService } from '../../core/services/friendsSuggestition/friends.service';
+import { SuggestedFriends } from '../../core/models/suggestedFriends/suggested-friends.interface';
+import { SearchFriendsPipe } from '../../core/pipes/searchFriends/search-friends-pipe';
 
 @Component({
-  selector: 'app-home',
-  imports: [
-    CreatPostComponent,
-    SinglePostComponent,
-    FormsModule,
-    SuggestedFriendsComponent,
-    AsideFeedComponent,
-  ],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css',
+  selector: 'app-suggested-friends',
+  imports: [FormsModule, SearchFriendsPipe],
+  templateUrl: './suggested-friends.component.html',
+  styleUrl: './suggested-friends.component.css',
 })
-export class HomeComponent implements OnInit {
-  protected readonly postsService = inject(PostsService);
-
+export class SuggestedFriendsComponent implements OnInit {
   private readonly friendsService = inject(FriendsService);
 
   isLoading = false;
@@ -57,6 +42,7 @@ export class HomeComponent implements OnInit {
       },
     });
   }
+
   followFriend(id: string) {
     console.log(id);
     this.currentid = id;

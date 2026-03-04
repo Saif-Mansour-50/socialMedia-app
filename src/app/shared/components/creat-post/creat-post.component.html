@@ -1,9 +1,14 @@
 <div class="bg-white rounded-2xl shadow-sm p-4 lg:p-6 mb-8">
-  <div class="flex items-center gap-3 mb-4">
-    <img [src]="userData.photo" class="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover" />
+  <div routerLink="/profile" class="flex items-center gap-3 mb-4">
+    <img
+      [src]="userData.photo"
+      class="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover cursor-pointer"
+    />
 
     <div>
-      <h3 class="font-semibold text-gray-800">{{ userData.name }}</h3>
+      <h3 routerLink="/profile" class="font-semibold text-gray-800 hover:underline cursor-pointer">
+        {{ userData.name }}
+      </h3>
       <select
         [formControl]="privacy"
         class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"

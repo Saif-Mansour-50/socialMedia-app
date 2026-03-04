@@ -5,10 +5,11 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 import { PostsService } from '../../../core/services/posts/posts.service';
 import { User } from '../../../core/models/Icomment/icomment.interface';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-creat-post',
-  imports: [ReactiveFormsModule, PickerComponent],
+  imports: [ReactiveFormsModule, PickerComponent, RouterLink],
   templateUrl: './creat-post.component.html',
   styleUrl: './creat-post.component.css',
 })

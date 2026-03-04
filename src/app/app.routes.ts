@@ -13,6 +13,9 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { BlankLayoutComponent } from './layouts/blank-layout/blank-layout.component';
 import { DetailsComponent } from './features/details/details.component';
 import { ChangePasswordComponent } from './features/auth/change-password/change-password.component';
+import { MyPostsComponent } from './features/my-posts/my-posts.component';
+import { CommunityComponent } from './features/community/community.component';
+import { SavedComponent } from './features/saved/saved.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,6 +39,9 @@ export const routes: Routes = [
       { path: 'profile', component: ProfileComponent },
       { path: 'details/:id', component: DetailsComponent },
       { path: 'changePassword', component: ChangePasswordComponent },
+      { path: 'myPosts', component: MyPostsComponent },
+      { path: 'community', component: CommunityComponent },
+      { path: 'saved', component: SavedComponent },
     ],
   },
   { path: '**', component: NotfoundComponent },

@@ -2,11 +2,10 @@ import { Ipost } from '../../core/models/Ipost/ipost.interface';
 import { MyProfile } from '../../core/models/myProfile/my-profile.interface';
 import { PostsService } from '../../core/services/posts/posts.service';
 import { Component, inject, OnInit } from '@angular/core';
-import { CommentsComponent } from '../../shared/components/comments/comments.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommentsComponent],
+  imports: [],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
