@@ -67,7 +67,11 @@ export class PostsService {
     return this.httpClient.get(`${environment.baseUrl}/users/profile-data`);
   }
 
+  // getUserPost(userId: any): Observable<any> {
+  //   return this.httpClient.get(`${environment.baseUrl}/users/${userId}/posts`);
+  // }
+
   getUserPost(userId: any): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/users/${userId}/posts`);
+    return this.httpClient.get(`${environment.baseUrl}/posts/feed?only=following&limit?`);
   }
 }

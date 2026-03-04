@@ -26,6 +26,8 @@ export class SinglePostComponent implements OnInit {
 
   userId: string = '';
 
+  visibleCount = 5;
+
   ngOnInit(): void {
     this.getAllPosts();
 
@@ -72,8 +74,6 @@ export class SinglePostComponent implements OnInit {
     });
   }
 
-  visibleCount = 5;
-
   loadMore() {
     if (this.isLoadingMore) return;
     this.isLoadingMore = true;
@@ -82,8 +82,8 @@ export class SinglePostComponent implements OnInit {
     if (this.visibleCount < total) {
       this.visibleCount += 5;
     }
-    // setTimeout(() => {
-    //   this.isLoadingMore = false;
-    // }, 2000);
+    setTimeout(() => {
+      this.isLoadingMore = false;
+    }, 2000);
   }
 }

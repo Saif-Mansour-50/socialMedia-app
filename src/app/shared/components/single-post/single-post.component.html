@@ -146,8 +146,9 @@
 }
 @if (visibleCount < postsService.postList().length) {
   @defer (on viewport) {
-    {{ loadMore() }}
   } @placeholder {
-    <div class="text-center py-6 text-gray-400 text-4xl">Loading more posts...</div>
+    <div class="text-center py-6 text-gray-400 text-4xl" (appear)="loadMore()">
+      Loading more posts...
+    </div>
   }
 }
