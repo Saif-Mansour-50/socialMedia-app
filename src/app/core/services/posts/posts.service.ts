@@ -74,4 +74,20 @@ export class PostsService {
   getUserPost(userId: any): Observable<any> {
     return this.httpClient.get(`${environment.baseUrl}/posts/feed?only=following&limit?`);
   }
+
+  likePost(postId: any): Observable<any> {
+    return this.httpClient.put(`${environment.baseUrl}/posts/${postId}/like`, null);
+  }
+
+  savePost(postId: any): Observable<any> {
+    return this.httpClient.put(`${environment.baseUrl}/posts/${postId}/bookmark`, null);
+  }
+
+  sharePost(body: any, postId: any): Observable<any> {
+    return this.httpClient.post(`${environment.baseUrl}/posts/${postId}/share`, body);
+  }
+
+  editPost(postId: any, body: any): Observable<any> {
+    return this.httpClient.put(`${environment.baseUrl}/posts/${postId}`, body);
+  }
 }

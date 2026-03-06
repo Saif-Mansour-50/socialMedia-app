@@ -1,6 +1,6 @@
 import { Icomment } from './../../../core/models/Icomment/icomment.interface';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 
 import { CommentsService } from '../../../core/services/comments/comments.service';
 import { PostsService } from '../../../core/services/posts/posts.service';
@@ -24,9 +24,11 @@ export class SinglePostComponent implements OnInit {
 
   commentList: Icomment[] = [];
 
+  @Output() upDateLike: EventEmitter<any> = new EventEmitter();
+
   userId: string = '';
 
-  visibleCount = 5;
+  visibleCount = 20;
 
   ngOnInit(): void {
     this.getAllPosts();
@@ -74,16 +76,61 @@ export class SinglePostComponent implements OnInit {
     });
   }
 
-  loadMore() {
-    if (this.isLoadingMore) return;
+  likePost(postId: string) {
     this.isLoadingMore = true;
-
-    const total = this.postsService.postList().length;
-    if (this.visibleCount < total) {
-      this.visibleCount += 5;
-    }
-    setTimeout(() => {
-      this.isLoadingMore = false;
-    }, 2000);
+    this.postsService.likePost(postId).subscribe({
+      next: (res) => {
+        this.getAllPosts();
+        this.isLoadingMore = false;
+      },
+      error: (err) => {
+        console.log(err);
+        this.isLoadingMore = false;
+      },
+    });
   }
+
+  savePost(postId: string) {
+    this.postsService.savePost(postId).subscribe({
+      next: (res) => {},
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  sharePost(postId: string) {
+    this.postsService.savePost(postId).subscribe({
+      next: (res) => {
+        console.log('share', res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  editPost(postId: string, body: any) {
+    this.postsService.savePost(postId).subscribe({
+      next: (res) => {
+        console.log('edit', res);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  // loadMore() {
+  //   if (this.isLoadingMore) return;
+  //   this.isLoadingMore = true;
+
+  //   const total = this.postsService.postList().length;
+  //   if (this.visibleCount < total) {
+  //     this.visibleCount += 5;
+  //   }
+  //   setTimeout(() => {
+  //     this.isLoadingMore = false;
+  //   }, 2000);
+  // }
 }

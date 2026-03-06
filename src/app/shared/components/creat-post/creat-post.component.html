@@ -1,55 +1,68 @@
 <div class="bg-white rounded-2xl shadow-sm p-4 lg:p-6 mb-8">
-  <div routerLink="/profile" class="flex items-center gap-3 mb-4">
+  <div class="flex items-center gap-3 mb-4">
     <img
-      [src]="userData.photo"
+      [src]="userData?.photo"
       class="w-10 h-10 lg:w-12 lg:h-12 rounded-full object-cover cursor-pointer"
+      routerLink="/profile"
     />
 
     <div>
       <h3 routerLink="/profile" class="font-semibold text-gray-800 hover:underline cursor-pointer">
-        {{ userData.name }}
+        {{ userData?.name }}
       </h3>
       <select
         [formControl]="privacy"
-        class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
+        class="border-none bg-transparent cursor-pointer py-0 px-5 text-xs rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="public">public</option>
-        <option value="following">followers</option>
-        <option value="only_me">only me</option>
+        <option value="public">🌍 Public</option>
+        <option value="following">👥 Followers</option>
+        <option value="only_me">🔒 Only me</option>
       </select>
     </div>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="cratPost()">
+  <form [formGroup]="form" (ngSubmit)="createPost()">
     <textarea
       formControlName="body"
       rows="4"
-      placeholder="What's on your mind, Saif?"
-      class="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      placeholder="What's on your mind?"
+      class="w-full p-4 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
     ></textarea>
-    @if (form.controls.body.errors && (form.controls.body.touched || isSubmitted())) {
-      <p class="text-red-600 text-sm font-bold mx-2 p-1">
-        Post Body must be entered and can't be less than 3 characters
-      </p>
+
+    @if (form.controls.body.invalid && (form.controls.body.touched || isSubmitted())) {
+      <div class="text-red-600 text-sm font-bold mx-2 p-1">
+        @if (form.controls.body.errors?.['required']) {
+          <span>Post body is required</span>
+        }
+        @if (form.controls.body.errors?.['minlength']) {
+          <span>Post must be at least 3 characters</span>
+        }
+      </div>
     }
 
     <hr class="my-4" />
 
     @if (imagePreview) {
-      <div class="my-2">
+      <div class="relative my-4 group">
         <img
           [src]="imagePreview"
-          class="w-full max-h-80 object-cover rounded-xl border"
+          class="w-full max-h-80 object-cover rounded-xl border border-gray-200"
           alt="Preview"
         />
+        <button
+          type="button"
+          (click)="removeImage()"
+          class="absolute top-2 right-2 rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white focus:outline-none focus:ring-2"
+        >
+          <i class="fa-solid fa-times"></i>
+        </button>
       </div>
     }
 
-    <div class="flex justify-between items-center">
-      <div class="flex gap-6 text-gray-600">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div class="flex gap-2 sm:gap-6 text-gray-600 flex-wrap">
         <input
           (change)="onFileSelected($event)"
-          formControlName="image"
           id="photoInput"
           type="file"
           hidden
@@ -57,43 +70,54 @@
         />
         <label
           for="photoInput"
-          class="flex items-center gap-2 hover:text-green-600 text-gray-700 px-4 py-2 rounded-xl cursor-pointer transition"
+          class="flex items-center gap-2 hover:text-green-600 text-gray-700 px-4 py-2 rounded-xl cursor-pointer transition hover:bg-gray-100"
         >
-          <i class="fa-regular fa-image"></i> Photo/video
+          <i class="fa-regular fa-image text-xl"></i>
+          <span class="hidden sm:inline">Photo/Video</span>
         </label>
 
-        <button
-          id="emoji-menu"
-          data-dropdown-toggle="emoji-dropdown"
-          data-dropdown-placement="bottom-end"
-          type="button"
-          class="flex items-center gap-2 hover:text-yellow-500 cursor-pointer"
-        >
-          <i class="fa-regular fa-face-smile"></i>
-          Feeling/activity
-        </button>
+        <div class="relative">
+          <button
+            id="emoji-menu"
+            type="button"
+            (click)="toggleEmojiPicker()"
+            class="flex items-center gap-2 hover:text-yellow-500 text-gray-700 px-4 py-2 rounded-xl cursor-pointer transition hover:bg-gray-100"
+          >
+            <i class="fa-regular fa-face-smile text-xl"></i>
+            <span class="hidden sm:inline">Feeling/activity</span>
+          </button>
 
-        <div
-          class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44"
-          id="emoji-dropdown"
-        >
-          <div aria-labelledby="emoji-menu">
-            <emoji-mart
-              (emojiSelect)="selectEmoji($event)"
-              [isNative]="true"
-              emoji="point_up"
-            ></emoji-mart>
-          </div>
+          @if (isEmojiPickerOpen()) {
+            <div
+              class="absolute z-50 top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg"
+              id="emoji-dropdown"
+            >
+              <emoji-mart
+                (emojiSelect)="selectEmoji($event)"
+                [isNative]="true"
+                emoji="point_up"
+                set="facebook"
+                title="Choose emoji"
+              ></emoji-mart>
+            </div>
+          }
         </div>
       </div>
 
       <button
-        [class.pointer-events-none]="isSubmitted()"
+        [disabled]="isSubmitted()"
+        [class.opacity-50]="isSubmitted()"
         [class.cursor-not-allowed]="isSubmitted()"
         type="submit"
-        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl shadow-md transition cursor-pointer"
+        class="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-xl shadow-md transition cursor-pointer disabled:hover:bg-blue-500"
       >
-        Post <i class="fa-solid fa-paper-plane"></i>
+        @if (isSubmitted()) {
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <span>Posting...</span>
+        } @else {
+          <span>Post</span>
+          <i class="fa-solid fa-paper-plane"></i>
+        }
       </button>
     </div>
   </form>

@@ -1,3 +1,4 @@
+<!-- استخدام slice مباشرة في template -->
 @for (post of postsService.postList().slice(0, visibleCount); track post._id) {
   <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
     <!-- post header -->
@@ -42,11 +43,22 @@
         >
           <ul class="py-2 text-sm">
             <li>
-              <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
+              <button
+                (click)="savePost(post._id)"
+                class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              >
+                @if (post.bookmarked == true) {
+                  <i class="fa-solid fa-bookmark text-blue-600"></i>
+                } @else {
+                  <i class="fa-regular fa-bookmark"></i>
+                }
                 Save post
               </button>
               @if (post.user._id === userId) {
-                <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <button
+                  (click)="editPost(post._id, post.body)"
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >
                   Edit post
                 </button>
 
@@ -88,19 +100,30 @@
     </div>
 
     <div class="grid grid-cols-3 border-t text-sm">
-      <button class="py-3 hover:bg-gray-100 font-medium text-gray-600">
-        <i class="fa-solid fa-thumbs-up"></i> Like
+      <button
+        (click)="likePost(post._id)"
+        class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer"
+      >
+        @if (post.likes.includes(userId)) {
+          <span><i class="fa-solid fa-thumbs-up text-blue-600"></i> Liked</span>
+        } @else {
+          <span><i class="fa-regular fa-thumbs-up"></i> Like</span>
+        }
       </button>
 
       <button #showcomments class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer">
         <i class="fa-regular fa-comment"></i> Comment
       </button>
 
-      <button class="py-3 hover:bg-gray-100 font-medium text-gray-600">
+      <button
+        (click)="sharePost(post._id)"
+        class="py-3 hover:bg-gray-100 font-medium text-gray-600"
+      >
         <i class="fa-solid fa-share-nodes"></i> Share
       </button>
     </div>
 
+    <!-- نموذج إضافة تعليق -->
     <form (submit)="creatComment($event, post._id)">
       <label for="chat" class="sr-only">Your message</label>
       <div class="flex items-center px-3 py-2 rounded-base bg-neutral-secondary-soft">
@@ -144,11 +167,19 @@
     }
   </div>
 }
-@if (visibleCount < postsService.postList().length) {
-  @defer (on viewport) {
-  } @placeholder {
-    <div class="text-center py-6 text-gray-400 text-4xl" (appear)="loadMore()">
-      Loading more posts...
-    </div>
-  }
-}
+
+<!-- @if (visibleCount < postsService.postList().length) {
+  <div class="text-center py-6">
+    <button
+      (click)="loadMore()"
+      [disabled]="isLoadingMore"
+      class="cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+    >
+      @if (isLoadingMore) {
+        <span> Loading more posts ... </span>
+      } @else {
+        <span> Loading more posts... </span>
+      }
+    </button>
+  </div>
+} -->
