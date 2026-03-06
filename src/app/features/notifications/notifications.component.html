@@ -7,7 +7,6 @@
           Realtime updates for likes, comments, shares, and follows.
         </p>
 
-        <!-- Tabs -->
         <div class="flex gap-3 mt-4">
           <button class="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium">
             All
@@ -28,9 +27,23 @@
     </div>
 
     <div class="p-6">
-      <div class="border border-gray-200 bg-gray-50 rounded-xl py-10 text-center text-gray-500">
+      <!-- <div class="border border-gray-200 bg-gray-50 rounded-xl py-10 text-center text-gray-500">
         No notifications yet.
-      </div>
+      </div> -->
+      @for (item of notList; track $index) {
+        <div class="flex justify-between mb-2 bg-blue-100 p-3 rounded-xl">
+          <div class="flex items-center gap-2.5">
+            <img class="w-10 h-10 rounded-full" [src]="item.actor.photo" alt="" />
+            <div class="font-medium text-heading">
+              <div>{{ item.actor.name }}</div>
+              <div class="text-sm font-normal text-body">{{ item.entity.body }}</div>
+            </div>
+          </div>
+          <div>
+            <span> {{ item.createdAt }} </span>
+          </div>
+        </div>
+      }
     </div>
   </div>
 </div>
