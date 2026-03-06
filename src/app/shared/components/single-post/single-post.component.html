@@ -1,7 +1,5 @@
-<!-- استخدام slice مباشرة في template -->
 @for (post of postsService.postList().slice(0, visibleCount); track post._id) {
   <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
-    <!-- post header -->
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center gap-3">
         <img
