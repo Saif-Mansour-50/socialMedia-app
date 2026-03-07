@@ -50,4 +50,22 @@ export class CommentsComponent implements OnInit {
     this.isModalOpen.set(false);
     this.selectedImage.set(null);
   }
+
+  getMinTimeUnit(timestamp: string): string {
+    const now = new Date();
+    const commentDate = new Date(timestamp);
+    const diffMs = now.getTime() - commentDate.getTime();
+
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays >= 1) {
+      return `${diffDays}d`;
+    } else if (diffHours >= 1) {
+      return `${diffHours}h`;
+    } else {
+      return `${diffMinutes}m`;
+    }
+  }
 }

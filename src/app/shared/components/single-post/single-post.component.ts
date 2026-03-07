@@ -20,20 +20,16 @@ export class SinglePostComponent implements OnInit {
   private readonly authService = inject(AuthService);
   protected readonly postsService = inject(PostsService);
 
-  // State
   isLoadingMore = false;
   visibleCount = 5; // Start with 5 posts
   userId: string = '';
 
-  // UI state
   openDropdownId = signal<string | null>(null);
   showCommentsForPost = signal<string | null>(null);
   isEmojiPickerOpen = signal<string | null>(null);
 
-  // Form controls for each post
   commentControls = new Map<string, FormControl>();
 
-  // File upload
   imagePreview: string | null = null;
   uploadedFile: File | null = null;
   imagePreviewForPost = signal<string | null>(null);
@@ -42,7 +38,6 @@ export class SinglePostComponent implements OnInit {
     this.getAllPosts();
     this.getUserId();
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', this.handleClickOutside.bind(this));
   }
 
@@ -69,7 +64,6 @@ export class SinglePostComponent implements OnInit {
     this.postsService.getAllPosts();
   }
 
-  // Get or create FormControl for a post
   getCommentControl(postId: string): FormControl {
     if (!this.commentControls.has(postId)) {
       this.commentControls.set(postId, new FormControl('', [Validators.required]));
@@ -265,5 +259,18 @@ export class SinglePostComponent implements OnInit {
       this.visibleCount += 5;
       this.isLoadingMore = false;
     }, 500);
+  }
+
+  isModalOpen = signal<boolean>(false);
+  selectedImage = signal<string | null>(null);
+
+  openImageModal(imageUrl: string): void {
+    this.selectedImage.set(imageUrl);
+    this.isModalOpen.set(true);
+  }
+
+  closeImageModal(): void {
+    this.isModalOpen.set(false);
+    this.selectedImage.set(null);
   }
 }
