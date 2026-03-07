@@ -1,8 +1,8 @@
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
 import { Component, inject, OnInit } from '@angular/core';
 
-import { AuthService } from '../../../core/services/authorization/auth.service';
-import { User } from '../../../core/models/Icomment/icomment.interface';
+import { AuthService } from '../../../features/auth/models/auth.service';
+import { User } from '../../../features/posts/models/Icomment/icomment.interface';
 
 @Component({
   selector: 'app-navbar',

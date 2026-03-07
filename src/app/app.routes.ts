@@ -2,20 +2,20 @@ import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth/auth-guard';
 import { notAuth } from './core/guards/noAuth/no-auth-guard';
-import { LoginComponent } from './features/auth/login/login.component';
-import { RegisterComponent } from './features/auth/register/register.component';
-import { HomeComponent } from './features/home/home.component';
-import { NotfoundComponent } from './features/notfound/notfound.component';
-import { NotificationsComponent } from './features/notifications/notifications.component';
-import { PostDetailsComponent } from './features/post-details/post-details.component';
-import { ProfileComponent } from './features/profile/profile.component';
+import { HomeComponent } from './features/posts/pages/home/home.component';
+import { NotfoundComponent } from './pages/notfound/notfound.component';
+import { NotificationsComponent } from './features/notification/pages/notifications/notifications.component';
+import { PostDetailsComponent } from './features/posts/components/post-details/post-details.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { BlankLayoutComponent } from './layouts/blank-layout/blank-layout.component';
-import { DetailsComponent } from './features/details/details.component';
-import { ChangePasswordComponent } from './features/auth/change-password/change-password.component';
-import { MyPostsComponent } from './features/my-posts/my-posts.component';
-import { CommunityComponent } from './features/community/community.component';
-import { SavedComponent } from './features/saved/saved.component';
+import { MyPostsComponent } from './features/posts/pages/my-posts/my-posts.component';
+import { CommunityComponent } from './features/posts/pages/community/community.component';
+import { SavedComponent } from './features/posts/pages/saved/saved.component';
+import { DetailsComponent } from './features/posts/pages/details/details.component';
+import { ChangePasswordComponent } from './features/auth/pages/change-password/change-password.component';
+import { LoginComponent } from './features/auth/pages/login/login.component';
+import { RegisterComponent } from './features/auth/pages/register/register.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
