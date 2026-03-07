@@ -1,5 +1,5 @@
 import { CommentsService } from './../../../core/services/comments/comments.service';
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { Icomment } from '../../../core/models/Icomment/icomment.interface';
 
 @Component({
@@ -38,17 +38,16 @@ export class CommentsComponent implements OnInit {
     });
   }
 
-  addComment(postId: string, content: string) {
-    this.commentsService.createComment(postId, content).subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.commentList.unshift(res.data.comment);
-          this.upDateComment.emit();
-        }
-      },
-      error: (err) => {
-        console.log('erorr-comment', err);
-      },
-    });
+  isModalOpen = signal<boolean>(false);
+  selectedImage = signal<string | null>(null);
+
+  openImageModal(imageUrl: string): void {
+    this.selectedImage.set(imageUrl);
+    this.isModalOpen.set(true);
+  }
+
+  closeImageModal(): void {
+    this.isModalOpen.set(false);
+    this.selectedImage.set(null);
   }
 }

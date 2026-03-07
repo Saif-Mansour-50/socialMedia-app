@@ -15,7 +15,7 @@ export class CommentsService {
     return this.httpClient.get(`${environment.baseUrl}/posts/${postId}/comments`);
   }
 
-  createComment(data: any, postId: any): Observable<any> {
-    return this.httpClient.post(`${environment.baseUrl}/posts/${postId}/comments`, data);
+  createComment(formData: FormData, postId: any): Observable<any> {
+    return this.httpClient.post(`${environment.baseUrl}/posts/${postId}/comments`, FormData);
   }
 }

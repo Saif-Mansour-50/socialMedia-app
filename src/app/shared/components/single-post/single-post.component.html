@@ -15,84 +15,98 @@
             {{ post.timeAgo }}
           </p>
         </div>
-        <div
-          class="p-0 w-fit items-center bg-neutral-secondary-medium text-heading text-sm rounded-base"
-        >
-          <select
-            [disabled]="post.user._id !== userId"
-            class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
+        @if (post.user._id === userId) {
+          <div
+            class="p-0 w-fit items-center bg-neutral-secondary-medium text-heading text-sm rounded-base"
           >
-            <option [selected]="post.privacy === 'public'" value="public">public</option>
-            <option [selected]="post.privacy === 'following'" value="following">followers</option>
-            <option [selected]="post.privacy === 'only_me'" value="only_me">only me</option>
-          </select>
-        </div>
+            <select
+              [disabled]="post.user._id !== userId"
+              class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
+            >
+              <option [selected]="post.privacy === 'public'" value="public">public</option>
+              <option [selected]="post.privacy === 'following'" value="following">followers</option>
+              <option [selected]="post.privacy === 'only_me'" value="only_me">only me</option>
+            </select>
+          </div>
+        }
       </div>
 
-      <div class="relative inline-block text-left group">
+      <div class="relative inline-block text-left" #dropdownContainer>
         <!-- Button -->
-        <button class="p-2 rounded-full hover:bg-gray-100 transition">
+        <button
+          (click)="toggleDropdown($event, post._id)"
+          class="p-2 rounded-full hover:bg-gray-100 transition cursor-pointer"
+        >
           <i class="fa-solid fa-ellipsis"></i>
         </button>
 
         <!-- Dropdown -->
-        <div
-          class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition cursor-pointer"
-        >
-          <ul class="py-2 text-sm">
-            <li>
-              <button
-                (click)="savePost(post._id)"
-                class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              >
-                @if (post.bookmarked == true) {
-                  <i class="fa-solid fa-bookmark text-blue-600"></i>
-                } @else {
-                  <i class="fa-regular fa-bookmark"></i>
-                }
-                Save post
-              </button>
-              @if (post.user._id === userId) {
+        @if (openDropdownId() === post._id) {
+          <div
+            class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50"
+          >
+            <ul class="py-2 text-sm">
+              <li>
                 <button
-                  (click)="editPost(post._id, post.body)"
-                  class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  (click)="savePost(post._id)"
+                  class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                 >
-                  Edit post
+                  @if (post.bookmarked) {
+                    <i class="fa-solid fa-bookmark text-blue-600"></i>
+                  } @else {
+                    <i class="fa-regular fa-bookmark"></i>
+                  }
+                  Save post
                 </button>
+              </li>
 
-                <button
-                  (click)="deletePostItem(post._id)"
-                  class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer"
-                >
-                  Delete post
-                </button>
+              @if (post.user._id === userId) {
+                <li>
+                  <button
+                    (click)="editPost(post)"
+                    class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  >
+                    Edit post
+                  </button>
+                </li>
+
+                <li>
+                  <button
+                    (click)="deletePostItem(post._id)"
+                    class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer"
+                  >
+                    Delete post
+                  </button>
+                </li>
               }
-            </li>
-          </ul>
-        </div>
+            </ul>
+          </div>
+        }
       </div>
     </div>
 
     <div class="px-4 pb-3">
-      <p class="text-gray-700">
+      <p class="text-gray-700 whitespace-pre-wrap">
         {{ post.body }}
       </p>
     </div>
 
-    <div [routerLink]="['/details', post._id]" class="w-full">
-      <img [src]="post.image" class="w-full max-h-125 object-cover cursor-pointer" />
-    </div>
+    @if (post.image) {
+      <div [routerLink]="['/details', post._id]" class="w-full cursor-pointer">
+        <img [src]="post.image" class="w-full max-h-125 object-cover" />
+      </div>
+    }
 
     <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500 border-t">
-      <span>{{ post.likesCount }} likes</span>
+      <span>{{ post.likesCount || 0 }} likes</span>
       <div class="flex gap-4">
-        <span>{{ post.sharesCount }} share</span>
-        <span>{{ post.commentsCount }} comments</span>
+        <span>{{ post.sharesCount || 0 }} share</span>
+        <span>{{ post.commentsCount || 0 }} comments</span>
         <button
           [routerLink]="['/details', post._id]"
           class="font-semibold cursor-pointer text-blue-600 hover:underline"
         >
-          view details
+          View details
         </button>
       </div>
     </div>
@@ -100,41 +114,52 @@
     <div class="grid grid-cols-3 border-t text-sm">
       <button
         (click)="likePost(post._id)"
-        class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer"
+        class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer flex items-center justify-center gap-2"
       >
-        @if (post.likes.includes(userId)) {
+        @if (post.likes?.includes(userId)) {
           <span><i class="fa-solid fa-thumbs-up text-blue-600"></i> Liked</span>
         } @else {
           <span><i class="fa-regular fa-thumbs-up"></i> Like</span>
         }
       </button>
 
-      <button #showcomments class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer">
+      <button
+        #showcomments
+        (click)="toggleComments(post._id)"
+        class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer flex items-center justify-center gap-2"
+      >
         <i class="fa-regular fa-comment"></i> Comment
       </button>
 
       <button
         (click)="sharePost(post._id)"
-        class="py-3 hover:bg-gray-100 font-medium text-gray-600"
+        class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer flex items-center justify-center gap-2"
       >
         <i class="fa-solid fa-share-nodes"></i> Share
       </button>
     </div>
 
-    <!-- نموذج إضافة تعليق -->
-    <form (submit)="creatComment($event, post._id)">
-      <label for="chat" class="sr-only">Your message</label>
+    <!-- Comments section -->
+    @if (showCommentsForPost() === post._id) {
+      <div class="p-4 border-t bg-gray-50">
+        <app-comments [postId]="post._id"></app-comments>
+      </div>
+    }
+
+    <form (submit)="createComment($event, post._id)">
+      <label for="chat-{{ post._id }}" class="sr-only">Your message</label>
       <div class="flex items-center px-3 py-2 rounded-base bg-neutral-secondary-soft">
         <textarea
-          [formControl]="commentValue"
-          id="chat"
+          [formControl]="getCommentControl(post._id)"
+          id="chat-{{ post._id }}"
           rows="1"
           class="mx-4 bg-neutral-primary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 placeholder:text-body"
-          placeholder="Your message..."
+          placeholder="Write a comment..."
         ></textarea>
         <button
           type="submit"
-          class="inline-flex justify-center p-2 text-fg-brand rounded-full cursor-pointer hover:bg-brand-softer"
+          [disabled]="!getCommentControl(post._id).valid"
+          class="inline-flex justify-center p-2 text-fg-brand rounded-full cursor-pointer hover:bg-brand-softer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg
             class="w-6 h-6 rotate-90 rtl:-rotate-90"
@@ -156,17 +181,72 @@
           <span class="sr-only">Send message</span>
         </button>
       </div>
-    </form>
 
-    @defer (on interaction(showcomments)) {
-      <div class="p-4 border-t bg-gray-50">
-        <app-comments [postId]="post._id"></app-comments>
+      @if (imagePreviewForPost() === post._id && imagePreview) {
+        <div class="relative my-4 group">
+          <img
+            [src]="imagePreview"
+            class="w-full max-h-80 object-cover rounded-xl border border-gray-200"
+            alt="Preview"
+          />
+          <button
+            type="button"
+            (click)="removeImage()"
+            class="absolute top-2 right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white focus:outline-none focus:ring-2"
+          >
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+      }
+
+      <div
+        class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-3 pb-3"
+      >
+        <div class="flex gap-2 sm:gap-6 text-gray-600 flex-wrap">
+          <input
+            (change)="onFileSelected($event, post._id)"
+            id="photoInput-{{ post._id }}"
+            type="file"
+            hidden
+            accept="image/*"
+          />
+          <label
+            for="photoInput-{{ post._id }}"
+            class="flex items-center gap-2 hover:text-green-600 text-gray-700 px-4 py-2 rounded-xl cursor-pointer transition hover:bg-gray-100"
+          >
+            <i class="fa-regular fa-image text-xl"></i>
+          </label>
+
+          <div class="relative">
+            <button
+              type="button"
+              (click)="toggleEmojiPicker(post._id)"
+              class="flex items-center gap-2 hover:text-yellow-500 text-gray-700 px-4 py-2 rounded-xl cursor-pointer transition hover:bg-gray-100"
+            >
+              <i class="fa-regular fa-face-smile text-xl"></i>
+            </button>
+
+            @if (isEmojiPickerOpen() === post._id) {
+              <div
+                class="absolute z-50 bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-xl shadow-lg"
+              >
+                <emoji-mart
+                  (emojiSelect)="selectEmoji($event, post._id)"
+                  [isNative]="true"
+                  emoji="point_up"
+                  set="facebook"
+                  title="Choose emoji"
+                ></emoji-mart>
+              </div>
+            }
+          </div>
+        </div>
       </div>
-    }
+    </form>
   </div>
 }
 
-<!-- @if (visibleCount < postsService.postList().length) {
+@if (visibleCount < postsService.postList().length) {
   <div class="text-center py-6">
     <button
       (click)="loadMore()"
@@ -174,10 +254,10 @@
       class="cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
     >
       @if (isLoadingMore) {
-        <span> Loading more posts ... </span>
+        <span>Loading more posts...</span>
       } @else {
-        <span> Loading more posts... </span>
+        <span>Load more posts</span>
       }
     </button>
   </div>
-} -->
+}

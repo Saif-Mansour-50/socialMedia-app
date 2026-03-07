@@ -28,4 +28,8 @@ export class AuthService {
   changePassword(data: any): Observable<any> {
     return this.httpClient.patch(environment.baseUrl + '/users/change-password', data);
   }
+
+  sharePost(postId: any): Observable<any> {
+    return this.httpClient.post(environment.baseUrl + `/posts/${postId}/share`, null);
+  }
 }
