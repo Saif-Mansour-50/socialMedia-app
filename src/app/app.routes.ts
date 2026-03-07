@@ -16,7 +16,7 @@ import { DetailsComponent } from './features/posts/pages/details/details.compone
 import { ChangePasswordComponent } from './features/auth/pages/change-password/change-password.component';
 import { LoginComponent } from './features/auth/pages/login/login.component';
 import { RegisterComponent } from './features/auth/pages/register/register.component';
-import { FeedComponent } from './features/posts/components/feed/feed.component';
+import { FeedComponent } from './features/posts/pages/feed/feed.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
