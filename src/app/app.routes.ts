@@ -16,7 +16,7 @@ import { DetailsComponent } from './features/posts/pages/details/details.compone
 import { ChangePasswordComponent } from './features/auth/pages/change-password/change-password.component';
 import { LoginComponent } from './features/auth/pages/login/login.component';
 import { RegisterComponent } from './features/auth/pages/register/register.component';
-import { SinglePostComponent } from './features/posts/components/single-post/single-post.component';
+import { FeedComponent } from './features/posts/components/feed/feed.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -39,7 +39,7 @@ export const routes: Routes = [
         component: HomeComponent,
         children: [
           { path: '', redirectTo: 'feed', pathMatch: 'full' },
-          { path: 'feed', component: SinglePostComponent },
+          { path: 'feed', component: FeedComponent },
           { path: 'community', component: CommunityComponent },
           { path: 'my-posts', component: MyPostsComponent },
           { path: 'saved', component: SavedComponent },

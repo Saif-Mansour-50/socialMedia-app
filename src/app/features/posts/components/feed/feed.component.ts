@@ -13,9 +13,9 @@ import { CommentsComponent } from '../comments/comments.component';
 @Component({
   selector: 'app-single-post',
   imports: [CommonModule, CommentsComponent, ReactiveFormsModule, RouterLink, PickerComponent],
-  templateUrl: './single-post.component.html',
+  templateUrl: './feed.component.html',
 })
-export class SinglePostComponent implements OnInit {
+export class FeedComponent implements OnInit {
   private readonly commentsService = inject(CommentsService);
   protected readonly postsService = inject(PostsService);
   private readonly authService = inject(AuthService);
