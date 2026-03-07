@@ -1,4 +1,3 @@
-import { Icomment } from './../../../core/models/Icomment/icomment.interface';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, inject, OnInit, signal, HostListener } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -55,7 +54,7 @@ export class SinglePostComponent implements OnInit {
         this.userId = JSON.parse(userData)._id;
       }
     } catch (error) {
-      console.error('Error parsing user data:', error);
+      console.error('Error:', error);
     }
   }
 
@@ -150,28 +149,10 @@ export class SinglePostComponent implements OnInit {
   }
 
   editPost(post: any): void {
-    // Implement edit functionality - you might want to open a modal
     console.log('Edit post:', post);
     this.closeDropdown();
-    // You can emit an event or open a modal here
   }
 
-  // changePrivacy(postId: string, event: Event): void {
-  //   const select = event.target as HTMLSelectElement;
-  //   const privacy = select.value;
-
-  //   this.postsService.updatePostPrivacy(postId, privacy).subscribe({
-  //     next: (res) => {
-  //       console.log('Privacy updated:', res);
-  //       this.getAllPosts();
-  //     },
-  //     error: (err) => {
-  //       console.error('Error updating privacy:', err);
-  //     },
-  //   });
-  // }
-
-  // Dropdown handling
   toggleDropdown(event: MouseEvent, postId: string): void {
     event.stopPropagation();
     this.openDropdownId.set(this.openDropdownId() === postId ? null : postId);
@@ -186,27 +167,18 @@ export class SinglePostComponent implements OnInit {
     this.closeDropdown();
   }
 
-  // Comments toggle
   toggleComments(postId: string): void {
     this.showCommentsForPost.set(this.showCommentsForPost() === postId ? null : postId);
   }
 
-  // File handling
   onFileSelected(e: Event, postId: string): void {
     const input = e.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
 
-      // Validate file type and size
       if (!file.type.startsWith('image/')) {
         alert('Please select an image file');
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        // 5MB limit
-        alert('File size should be less than 5MB');
         return;
       }
 
@@ -229,14 +201,12 @@ export class SinglePostComponent implements OnInit {
     this.uploadedFile = null;
     this.imagePreviewForPost.set(null);
 
-    // Reset file input
     const fileInputs = document.querySelectorAll('input[type="file"]');
     fileInputs.forEach((input) => {
       (input as HTMLInputElement).value = '';
     });
   }
 
-  // Emoji handling
   toggleEmojiPicker(postId: string): void {
     this.isEmojiPickerOpen.set(this.isEmojiPickerOpen() === postId ? null : postId);
   }
@@ -248,13 +218,11 @@ export class SinglePostComponent implements OnInit {
     this.isEmojiPickerOpen.set(null);
   }
 
-  // Load more posts
   loadMore(): void {
     if (this.isLoadingMore) return;
 
     this.isLoadingMore = true;
 
-    // Simulate loading delay
     setTimeout(() => {
       this.visibleCount += 5;
       this.isLoadingMore = false;

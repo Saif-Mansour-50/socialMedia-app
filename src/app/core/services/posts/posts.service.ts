@@ -82,6 +82,9 @@ export class PostsService {
   savePost(postId: any): Observable<any> {
     return this.httpClient.put(`${environment.baseUrl}/posts/${postId}/bookmark`, null);
   }
+  getsavePost(postId: any): Observable<any> {
+    return this.httpClient.get(`${environment.baseUrl}/posts/${postId}/bookmark`);
+  }
 
   sharePost(body: any, postId: any): Observable<any> {
     return this.httpClient.post(`${environment.baseUrl}/posts/${postId}/share`, body);

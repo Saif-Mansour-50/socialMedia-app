@@ -32,7 +32,6 @@
       </div>
 
       <div class="relative inline-block text-left" #dropdownContainer>
-        <!-- Button -->
         <button
           (click)="toggleDropdown($event, post._id)"
           class="p-2 rounded-full hover:bg-gray-100 transition cursor-pointer"
@@ -40,7 +39,6 @@
           <i class="fa-solid fa-ellipsis"></i>
         </button>
 
-        <!-- Dropdown -->
         @if (openDropdownId() === post._id) {
           <div
             class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg z-50"

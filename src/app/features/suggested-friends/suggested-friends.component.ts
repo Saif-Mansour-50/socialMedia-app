@@ -30,7 +30,7 @@ export class SuggestedFriendsComponent implements OnInit {
 
     this.friendsService.getFrindesSuggestition().subscribe({
       next: (res) => {
-        console.log('friends', res);
+        // console.log('friends', res);
 
         this.suggestedFriendsList = res.data.suggestions;
         this.isLoading = false;
