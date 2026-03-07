@@ -1,12 +1,14 @@
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, inject, OnInit, signal, HostListener } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+
 import { CommentsService } from '../../../core/services/comments/comments.service';
+import { AuthService } from '../../../core/services/authorization/auth.service';
 import { PostsService } from '../../../core/services/posts/posts.service';
 import { CommentsComponent } from '../comments/comments.component';
-import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../core/services/authorization/auth.service';
 
 @Component({
   selector: 'app-single-post',
@@ -16,8 +18,8 @@ import { AuthService } from '../../../core/services/authorization/auth.service';
 })
 export class SinglePostComponent implements OnInit {
   private readonly commentsService = inject(CommentsService);
-  private readonly authService = inject(AuthService);
   protected readonly postsService = inject(PostsService);
+  private readonly authService = inject(AuthService);
 
   isLoadingMore = false;
   visibleCount = 5; // Start with 5 posts
