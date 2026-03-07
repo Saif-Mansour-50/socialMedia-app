@@ -1,0 +1,21 @@
+<div class="bg-gray-100 p-4 lg:p-6">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <aside class="lg:col-span-2">
+      <app-aside-feed></app-aside-feed>
+    </aside>
+
+    <div class="col-span-1 lg:col-span-6 space-y-6">
+      <app-creat-post />
+
+      @if (postsService.isLoading()) {
+        <p>Is Loading .............</p>
+      }
+
+      <router-outlet />
+    </div>
+
+    <aside class="col-span-1 lg:col-span-3">
+      <app-suggested-friends></app-suggested-friends>
+    </aside>
+  </div>
+</div>

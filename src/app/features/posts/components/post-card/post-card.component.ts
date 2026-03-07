@@ -1,0 +1,211 @@
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, input, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+
+import { CommentsComponent } from '../comments/comments.component';
+
+import { AuthService } from '../../../auth/models/auth.service';
+import { CommentsService } from '../../models/comments.service';
+import { PostsService } from '../../models/posts.service';
+
+import { Ipost } from '../../models/Ipost/ipost.interface';
+
+@Component({
+  selector: 'app-post-card',
+  imports: [ReactiveFormsModule, RouterLink, CommentsComponent, PickerComponent],
+  templateUrl: './post-card.component.html',
+})
+export class PostCardComponent {
+  private readonly commentsService = inject(CommentsService);
+  protected readonly postsService = inject(PostsService);
+  private readonly authService = inject(AuthService);
+
+  post = input.required<Ipost>();
+
+  showCommentsForPost = signal<string | null>(null);
+  imagePreviewForPost = signal<string | null>(null);
+  isEmojiPickerOpen = signal<string | null>(null);
+  openDropdownId = signal<string | null>(null);
+  selectedImage = signal<string | null>(null);
+  isModalOpen = signal<boolean>(false);
+
+  commentControls = new Map<string, FormControl>();
+
+  userId: string = '';
+  imagePreview: string | null = null;
+  uploadedFile: File | null = null;
+
+  ngOnInit(): void {
+    this.getUserId();
+  }
+
+  toggleDropdown(event: MouseEvent, postId: string): void {
+    event.stopPropagation();
+    this.openDropdownId.set(this.openDropdownId() === postId ? null : postId);
+  }
+
+  toggleEmojiPicker(postId: string): void {
+    this.isEmojiPickerOpen.set(this.isEmojiPickerOpen() === postId ? null : postId);
+  }
+
+  openImageModal(imageUrl: string): void {
+    this.selectedImage.set(imageUrl);
+    this.isModalOpen.set(true);
+  }
+
+  private getUserId(): void {
+    try {
+      const userData = localStorage.getItem('userData');
+      if (userData) {
+        this.userId = JSON.parse(userData)._id;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  savePost(postId: string): void {
+    this.postsService.savePost(postId).subscribe({
+      next: (res) => {
+        console.log('Post saved:', res);
+        // this.getAllPosts();
+        // this.closeDropdown();
+      },
+      error: (err) => {
+        console.error('Error saving post:', err);
+      },
+    });
+  }
+
+  editPost(post: any): void {
+    console.log('Edit post:', post);
+    // this.closeDropdown();
+  }
+
+  deletePostItem(postId: string): void {
+    if (confirm('Are you sure you want to delete this post?')) {
+      this.postsService.deletePost(postId).subscribe({
+        next: (res) => {
+          console.log('Post deleted:', res);
+          // this.getAllPosts();
+          // this.closeDropdown();
+        },
+        error: (err) => {
+          console.error('Error deleting post:', err);
+        },
+      });
+    }
+  }
+
+  likePost(postId: string): void {
+    this.postsService.likePost(postId).subscribe({
+      next: (res) => {
+        // this.getAllPosts();
+      },
+      error: (err) => {
+        console.error('Error liking post:', err);
+      },
+    });
+  }
+
+  toggleComments(postId: string): void {
+    this.showCommentsForPost.set(this.showCommentsForPost() === postId ? null : postId);
+  }
+
+  sharePost(postId: string): void {
+    this.authService.sharePost(postId).subscribe({
+      next: (res) => {
+        console.log('Post shared:', res);
+        // this.getAllPosts();
+      },
+      error: (err) => {
+        console.error('Error sharing post:', err);
+      },
+    });
+  }
+
+  removeImage(): void {
+    if (this.imagePreview) {
+      URL.revokeObjectURL(this.imagePreview);
+      this.imagePreview = null;
+    }
+    this.uploadedFile = null;
+    this.imagePreviewForPost.set(null);
+
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    fileInputs.forEach((input) => {
+      (input as HTMLInputElement).value = '';
+    });
+  }
+
+  selectEmoji($event: any, postId: string): void {
+    const control = this.getCommentControl(postId);
+    const currentValue = control.value || '';
+    control.setValue(`${currentValue}${$event.emoji.native}`);
+    this.isEmojiPickerOpen.set(null);
+  }
+
+  onFileSelected(e: Event, postId: string): void {
+    const input = e.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      this.uploadedFile = file;
+      this.imagePreviewForPost.set(postId);
+
+      if (this.imagePreview) {
+        URL.revokeObjectURL(this.imagePreview);
+      }
+
+      this.imagePreview = URL.createObjectURL(file);
+    }
+  }
+
+  // comments section
+  getCommentControl(postId: string) {
+    if (!this.commentControls.has(postId)) {
+      this.commentControls.set(postId, new FormControl('', [Validators.required]));
+    }
+    return this.commentControls.get(postId)!;
+  }
+
+  createComment(e: SubmitEvent, postId: string): void {
+    e.preventDefault();
+    const control = this.getCommentControl(postId);
+
+    if (control.valid) {
+      const formData = new FormData();
+      formData.append('content', control.value);
+
+      if (this.uploadedFile && this.imagePreviewForPost() === postId) {
+        formData.append('image', this.uploadedFile);
+      }
+
+      this.commentsService.createComment(formData, postId).subscribe({
+        next: (res) => {
+          if (res.success) {
+            control.reset();
+            this.removeImage();
+            // this.getAllPosts();
+          }
+        },
+        error: (err) => {
+          console.error('Error creating comment:', err);
+        },
+      });
+    }
+  }
+
+  closeImageModal(): void {
+    this.isModalOpen.set(false);
+    this.selectedImage.set(null);
+  }
+}

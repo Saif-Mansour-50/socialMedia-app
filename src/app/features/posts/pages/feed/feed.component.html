@@ -1,0 +1,19 @@
+@for (postData of postsService.postList().slice(0, visibleCount); track postData._id) {
+  <app-post-card [post]="postData" />
+}
+
+@if (visibleCount < postsService.postList().length) {
+  <div class="text-center py-6">
+    <button
+      (click)="loadMore()"
+      [disabled]="isLoadingMore"
+      class="cursor-pointer px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+    >
+      @if (isLoadingMore) {
+        <span>Loading more posts...</span>
+      } @else {
+        <span>Load more posts</span>
+      }
+    </button>
+  </div>
+}
