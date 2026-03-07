@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { AsideFeedComponent } from '../../components/aside-feed/aside-feed.component';
-import { SuggestedFriendsComponent } from '../../components/suggested-friends/suggested-friends.component';
 
 @Component({
   selector: 'app-saved',
-  imports: [AsideFeedComponent, SuggestedFriendsComponent],
+  imports: [],
   templateUrl: './saved.component.html',
   styleUrl: './saved.component.css',
 })

@@ -1,24 +1,24 @@
-import { Component, inject, OnInit } from '@angular/core';
-
-import { CreatPostComponent } from '../../components/creat-post/creat-post.component';
-import { PostsService } from '../../models/posts.service';
-import { SinglePostComponent } from '../../components/single-post/single-post.component';
-import { SuggestedFriends } from '../../models/suggestedFriends/suggested-friends.interface';
-import { FriendsService } from '../../models/friends.service';
-import { SearchFriendsPipe } from '../../../../shared/pipes/search-friends-pipe';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+
 import { SuggestedFriendsComponent } from '../../components/suggested-friends/suggested-friends.component';
-import { RouterLink } from '@angular/router';
 import { AsideFeedComponent } from '../../components/aside-feed/aside-feed.component';
+import { CreatPostComponent } from '../../components/creat-post/creat-post.component';
+
+import { FriendsService } from '../../models/friends.service';
+import { PostsService } from '../../models/posts.service';
+
+import { SuggestedFriends } from '../../models/suggestedFriends/suggested-friends.interface';
 
 @Component({
   selector: 'app-home',
   imports: [
     CreatPostComponent,
-    SinglePostComponent,
     FormsModule,
     SuggestedFriendsComponent,
     AsideFeedComponent,
+    RouterOutlet,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -35,6 +35,8 @@ export class HomeComponent implements OnInit {
   searchTerm = '';
 
   suggestedFriendsList: SuggestedFriends[] = [];
+
+  activeOption = signal<'feed' | 'community' | 'my-posts' | 'saved'>('feed');
 
   ngOnInit(): void {
     this.getSuggested();

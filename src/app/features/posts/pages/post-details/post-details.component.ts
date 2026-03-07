@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { PostsService } from '../../models/posts.service';
 import { Ipost } from '../../models/Ipost/ipost.interface';
-import { CommentsComponent } from '../comments/comments.component';
+import { CommentsComponent } from '../../components/comments/comments.component';
 
 @Component({
   selector: 'app-post-details',

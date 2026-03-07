@@ -1,13 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { AsideFeedComponent } from '../../components/aside-feed/aside-feed.component';
-import { SuggestedFriendsComponent } from '../../components/suggested-friends/suggested-friends.component';
 import { Ipost } from '../../models/Ipost/ipost.interface';
 import { PostsService } from '../../models/posts.service';
-import { CreatPostComponent } from '../../components/creat-post/creat-post.component';
 
 @Component({
   selector: 'app-community',
-  imports: [AsideFeedComponent, SuggestedFriendsComponent, CreatPostComponent],
+  imports: [],
   templateUrl: './community.component.html',
   styleUrl: './community.component.css',
 })
