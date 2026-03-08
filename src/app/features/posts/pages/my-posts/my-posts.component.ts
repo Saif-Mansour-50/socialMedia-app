@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { Ipost } from '../../models/Ipost/ipost.interface';
 import { PostsService } from '../../models/posts.service';
+import { PostCardComponent } from '../../components/post-card/post-card.component';
 
 @Component({
   selector: 'app-my-posts',
-  imports: [],
+  imports: [PostCardComponent],
   templateUrl: './my-posts.component.html',
   styleUrl: './my-posts.component.css',
 })
@@ -31,5 +32,9 @@ export class MyPostsComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+  refreshPosts(): void {
+    console.log('Refreshing posts...');
+    this.profilePost();
   }
 }

@@ -1,5 +1,5 @@
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, EventEmitter, inject, input, Output, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -22,6 +22,8 @@ export class PostCardComponent {
   protected readonly postsService = inject(PostsService);
   private readonly authService = inject(AuthService);
 
+  @Output() getNewPosts: EventEmitter<any> = new EventEmitter();
+
   post = input.required<Ipost>();
 
   showCommentsForPost = signal<string | null>(null);
@@ -30,6 +32,7 @@ export class PostCardComponent {
   openDropdownId = signal<string | null>(null);
   selectedImage = signal<string | null>(null);
   isModalOpen = signal<boolean>(false);
+  isLoading = signal<boolean>(false);
 
   commentControls = new Map<string, FormControl>();
 
@@ -70,8 +73,6 @@ export class PostCardComponent {
     this.postsService.savePost(postId).subscribe({
       next: (res) => {
         console.log('Post saved:', res);
-        // this.getAllPosts();
-        // this.closeDropdown();
       },
       error: (err) => {
         console.error('Error saving post:', err);
@@ -81,7 +82,6 @@ export class PostCardComponent {
 
   editPost(post: any): void {
     console.log('Edit post:', post);
-    // this.closeDropdown();
   }
 
   deletePostItem(postId: string): void {
@@ -89,8 +89,7 @@ export class PostCardComponent {
       this.postsService.deletePost(postId).subscribe({
         next: (res) => {
           console.log('Post deleted:', res);
-          // this.getAllPosts();
-          // this.closeDropdown();
+          this.getNewPosts.emit();
         },
         error: (err) => {
           console.error('Error deleting post:', err);
@@ -100,12 +99,17 @@ export class PostCardComponent {
   }
 
   likePost(postId: string): void {
+    this.isLoading.set(true);
+
     this.postsService.likePost(postId).subscribe({
       next: (res) => {
-        // this.getAllPosts();
+        console.log(res);
+        this.getNewPosts.emit();
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error liking post:', err);
+        this.isLoading.set(false);
       },
     });
   }
@@ -118,7 +122,7 @@ export class PostCardComponent {
     this.authService.sharePost(postId).subscribe({
       next: (res) => {
         console.log('Post shared:', res);
-        // this.getAllPosts();
+        this.getNewPosts.emit();
       },
       error: (err) => {
         console.error('Error sharing post:', err);
@@ -194,8 +198,9 @@ export class PostCardComponent {
           if (res.success) {
             control.reset();
             this.removeImage();
-            // this.getAllPosts();
+            this.getNewPosts.emit();
           }
+          console.log(res);
         },
         error: (err) => {
           console.error('Error creating comment:', err);

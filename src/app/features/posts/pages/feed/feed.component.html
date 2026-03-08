@@ -1,5 +1,5 @@
 @for (postData of postsService.postList().slice(0, visibleCount); track postData._id) {
-  <app-post-card [post]="postData" />
+  <app-post-card [post]="postData" (getNewPosts)="refreshPosts()" />
 }
 
 @if (visibleCount < postsService.postList().length) {

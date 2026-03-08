@@ -10,6 +10,7 @@ import { FriendsService } from '../../models/friends.service';
 import { PostsService } from '../../models/posts.service';
 
 import { SuggestedFriends } from '../../models/suggestedFriends/suggested-friends.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,7 @@ import { SuggestedFriends } from '../../models/suggestedFriends/suggested-friend
     SuggestedFriendsComponent,
     AsideFeedComponent,
     RouterOutlet,
+    CommonModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -40,6 +42,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSuggested();
+  }
+
+  getAllPosts() {
+    this.postsService.getAllPosts();
   }
 
   getSuggested() {

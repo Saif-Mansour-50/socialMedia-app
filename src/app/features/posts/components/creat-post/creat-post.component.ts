@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { PostsService } from '../../models/posts.service';
 import { User } from '../../models/Icomment/icomment.interface';
@@ -15,6 +15,8 @@ import { CommonModule } from '@angular/common';
 export class CreatPostComponent implements OnInit, OnDestroy {
   private readonly formBuilder = inject(FormBuilder);
   private readonly postsService = inject(PostsService);
+
+  @Output() getNewPosts: EventEmitter<any> = new EventEmitter();
 
   privacy = new FormControl('public');
   isSubmitted = signal(false);
@@ -74,17 +76,25 @@ export class CreatPostComponent implements OnInit, OnDestroy {
 
       if (this.form.value.body) {
         formData.append('body', this.form.value.body);
+        console.log('Body:', this.form.value.body);
       }
 
       if (this.upLoadedFile) {
         formData.append('image', this.upLoadedFile, this.upLoadedFile.name);
+        console.log(
+          'File:',
+          this.upLoadedFile.name,
+          this.upLoadedFile.type,
+          this.upLoadedFile.size,
+        );
       }
 
       formData.append('privacy', this.privacy.value || 'public');
 
       this.postsService.createPost(formData).subscribe({
         next: (res) => {
-          this.postsService.getAllPosts();
+          console.log('creatPost', res);
+          this.getNewPosts.emit();
           this.resetForm();
         },
         error: (err) => {
@@ -92,10 +102,6 @@ export class CreatPostComponent implements OnInit, OnDestroy {
           this.isSubmitted.set(false);
         },
       });
-    } else {
-      this.isSubmitted.set(false);
-
-      this.form.controls.body.markAsTouched();
     }
   }
 
