@@ -1,25 +1,26 @@
 <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
+  <!-- Post Header -->
   <div class="flex items-center justify-between p-4">
     <div class="flex items-center gap-3">
       <img
-        [src]="post().user.photo"
-        [alt]="post().user.name"
+        [src]="post().user?.photo || 'assets/default-avatar.png'"
+        [alt]="post().user?.name || 'User'"
         class="w-10 h-10 rounded-full object-cover"
       />
       <div>
         <h3 class="font-semibold text-gray-800">
-          {{ post().user.name }}
+          {{ post().user?.name || 'Unknown User' }}
         </h3>
         <p class="text-sm text-gray-500">
           {{ post().timeAgo }}
         </p>
       </div>
-      @if (post().user._id === userId) {
+      @if (post().user?._id === userId) {
         <div
           class="p-0 w-fit items-center bg-neutral-secondary-medium text-heading text-sm rounded-base"
         >
           <select
-            [disabled]="post().user._id !== userId"
+            [disabled]="post().user?._id !== userId"
             class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
           >
             <option [value]="'public'" [selected]="post().privacy === 'public'">public</option>
@@ -32,6 +33,7 @@
       }
     </div>
 
+    <!-- Dropdown Menu -->
     <div class="relative inline-block text-left" #dropdownContainer>
       <button
         (click)="toggleDropdown($event, post()._id)"
@@ -59,10 +61,10 @@
               </button>
             </li>
 
-            @if (post().user._id === userId) {
+            @if (post().user?._id === userId) {
               <li>
                 <button
-                  (click)="editPost(post)"
+                  (click)="editPost(post()._id)"
                   class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 >
                   Edit post
@@ -84,22 +86,58 @@
     </div>
   </div>
 
+  <!-- Post Content -->
   <div class="px-4 pb-3">
-    <p class="text-gray-700 whitespace-pre-wrap">
-      {{ post().body }}
-    </p>
+    @if (editingPostId() === post()._id) {
+      <!-- Edit Mode -->
+      <div class="space-y-2">
+        <textarea
+          #editTextarea
+          [value]="editingContent()"
+          (input)="editingContent.set(editTextarea.value)"
+          class="w-full p-3 border-2 border-blue-400 rounded-lg focus:ring-2 focus:ring-blue-500 min-h-[120px] transition resize-y"
+          rows="4"
+          placeholder="Edit your post..."
+          (keydown.ctrl.enter)="saveEdit(post()._id)"
+          (keydown.esc)="cancelEdit()"
+          autofocus
+        ></textarea>
+
+        <div class="flex gap-2 justify-end">
+          <button
+            (click)="cancelEdit()"
+            class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            (click)="saveEdit(post()._id)"
+            [disabled]="!editingContent().trim()"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 cursor-pointer disabled:cursor-not-allowed"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    } @else {
+      <!-- View Mode -->
+      <p class="text-gray-700">{{ post().body }}</p>
+    }
   </div>
 
+  <!-- Post Image -->
   @if (post().image) {
     <div class="w-full cursor-pointer">
       <img
         (click)="openImageModal(post().image)"
         [src]="post().image"
         class="w-full max-h-125 object-cover"
+        alt="Post image"
       />
     </div>
   }
 
+  <!-- Post Stats -->
   <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500 border-t">
     <span>{{ post().likesCount || 0 }} likes</span>
     <div class="flex gap-4">
@@ -114,24 +152,25 @@
     </div>
   </div>
 
+  <!-- Action Buttons -->
   <div class="grid grid-cols-3 border-t text-sm">
     <button
       (click)="likePost(post()._id)"
-      class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer flex items-center justify-center gap-2"
+      class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+      [disabled]="isLoading()"
     >
-      @if (isLoading() == false) {
-        @if (post().likes.includes(userId)) {
+      @if (!isLoading()) {
+        @if (post().likes?.includes(userId)) {
           <span><i class="fa-solid fa-thumbs-up text-blue-600"></i> Liked</span>
         } @else {
           <span><i class="fa-regular fa-thumbs-up"></i> Like</span>
         }
       } @else {
-        <span><i class="fa fs-spin fa-spinner"></i> Loding</span>
+        <span><i class="fa fa-spin fa-spinner"></i> Loading</span>
       }
     </button>
 
     <button
-      #showcomments
       (click)="toggleComments(post()._id)"
       class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer flex items-center justify-center gap-2"
     >
@@ -146,14 +185,15 @@
     </button>
   </div>
 
-  <!-- Comments section -->
+  <!-- Comments Section -->
   @if (showCommentsForPost() === post()._id) {
     <div class="p-4 border-t bg-gray-50">
       <app-comments [postId]="post()._id"></app-comments>
     </div>
   }
 
-  <form (submit)="createComment($event, post()._id)">
+  <!-- Comment Form -->
+  <form (submit)="createComment($event, post()._id)" class="border-t">
     <label for="chat-{{ post()._id }}" class="sr-only">Your message</label>
     <div class="flex items-center px-3 py-2 rounded-base bg-neutral-secondary-soft">
       <textarea
@@ -189,8 +229,9 @@
       </button>
     </div>
 
+    <!-- Image Preview -->
     @if (imagePreviewForPost() === post()._id && imagePreview) {
-      <div class="relative my-4 group">
+      <div class="relative my-4 group px-3">
         <img
           [src]="imagePreview"
           class="w-full max-h-80 object-cover rounded-xl border border-gray-200"
@@ -199,13 +240,14 @@
         <button
           type="button"
           (click)="removeImage()"
-          class="absolute top-2 right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white focus:outline-none focus:ring-2"
+          class="absolute top-2 right-2 bg-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black hover:text-white focus:outline-none focus:ring-2 cursor-pointer"
         >
           <i class="fa-solid fa-times"></i>
         </button>
       </div>
     }
 
+    <!-- Comment Tools -->
     <div
       class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-3 pb-3"
     >
@@ -252,15 +294,16 @@
   </form>
 </div>
 
+<!-- Image Modal -->
 @if (isModalOpen()) {
   <div
     class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
     (click)="closeImageModal()"
   >
-    <div class="relative max-w-4xl max-h-screen cursor-pointer">
+    <div class="relative max-w-4xl max-h-screen">
       <img
         [src]="selectedImage()"
-        alt="Enlarged comment image"
+        alt="Enlarged image"
         class="max-w-full max-h-screen object-contain rounded-lg"
         (click)="$event.stopPropagation()"
       />

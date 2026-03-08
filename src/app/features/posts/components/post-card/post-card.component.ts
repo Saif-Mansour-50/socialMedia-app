@@ -1,5 +1,5 @@
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, EventEmitter, inject, input, Output, signal } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, inject, input, Output, signal, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -14,10 +14,10 @@ import { Ipost } from '../../models/Ipost/ipost.interface';
 
 @Component({
   selector: 'app-post-card',
-  imports: [ReactiveFormsModule, RouterLink, CommentsComponent, PickerComponent],
+  imports: [ReactiveFormsModule, RouterLink, CommentsComponent, PickerComponent, FormsModule],
   templateUrl: './post-card.component.html',
 })
-export class PostCardComponent {
+export class PostCardComponent implements OnInit {
   private readonly commentsService = inject(CommentsService);
   protected readonly postsService = inject(PostsService);
   private readonly authService = inject(AuthService);
@@ -31,6 +31,8 @@ export class PostCardComponent {
   isEmojiPickerOpen = signal<string | null>(null);
   openDropdownId = signal<string | null>(null);
   selectedImage = signal<string | null>(null);
+  editingPostId = signal<string | null>(null);
+  editingContent = signal<string>('');
   isModalOpen = signal<boolean>(false);
   isLoading = signal<boolean>(false);
 
@@ -65,7 +67,7 @@ export class PostCardComponent {
         this.userId = JSON.parse(userData)._id;
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error parsing user data:', error);
     }
   }
 
@@ -73,6 +75,7 @@ export class PostCardComponent {
     this.postsService.savePost(postId).subscribe({
       next: (res) => {
         console.log('Post saved:', res);
+        this.openDropdownId.set(null);
       },
       error: (err) => {
         console.error('Error saving post:', err);
@@ -80,8 +83,38 @@ export class PostCardComponent {
     });
   }
 
-  editPost(post: any): void {
-    console.log('Edit post:', post);
+  editPost(postId: string): void {
+    this.editingPostId.set(postId);
+    this.editingContent.set(this.post().body || '');
+    this.openDropdownId.set(null);
+  }
+
+  saveEdit(postId: string, privacy?: string): void {
+    if (!this.editingContent().trim()) return;
+
+    const updateData: any = {
+      body: this.editingContent(),
+    };
+
+    if (privacy) {
+      updateData.privacy = privacy;
+    }
+
+    this.postsService.editPost(postId, updateData).subscribe({
+      next: () => {
+        this.editingPostId.set(null);
+        this.editingContent.set('');
+        this.getNewPosts.emit();
+      },
+      error: (err) => {
+        console.error('Error editing post:', err);
+      },
+    });
+  }
+
+  cancelEdit(): void {
+    this.editingPostId.set(null);
+    this.editingContent.set('');
   }
 
   deletePostItem(postId: string): void {
