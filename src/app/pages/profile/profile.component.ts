@@ -3,10 +3,11 @@ import { AuthService } from '../../features/auth/models/auth.service';
 import { Ipost } from '../../features/posts/models/Ipost/ipost.interface';
 import { PostsService } from '../../features/posts/models/posts.service';
 import { Component, inject, OnInit, input } from '@angular/core';
+import { PostCardComponent } from '../../features/posts/components/post-card/post-card.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, PostCardComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
@@ -17,8 +18,12 @@ export class ProfileComponent implements OnInit {
   profileDetails: MyProfile = {} as MyProfile;
   postList: Ipost[] = [];
   userId: string = '';
+
   uploadedFile!: File;
   isUploading: boolean = false;
+
+  uploadedCoverFile!: File;
+  isUploadingCover: boolean = false;
 
   body: FormControl = new FormControl();
 
@@ -52,14 +57,43 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  refreshPosts() {
+    this.profilePost();
+  }
+
   onFileSelected(e: Event) {
     if (e.target) {
       let input = e.target as HTMLInputElement;
       if (input.files && input.files.length > 0) {
         this.uploadedFile = input.files[0];
 
-        console.log('upload', this.uploadedFile);
+        if (!this.uploadedFile.type.startsWith('image/')) {
+          alert('only photo');
+          return;
+        }
+
+        console.log('upload profile', this.uploadedFile);
         this.uploadProfilePhoto();
+      }
+    }
+  }
+
+  onCoverSelected(e: Event) {
+    if (e.target) {
+      let input = e.target as HTMLInputElement;
+      if (input.files && input.files.length > 0) {
+        this.uploadedCoverFile = input.files[0];
+
+        if (!this.uploadedCoverFile.type.startsWith('image/')) {
+          return;
+        }
+
+        if (this.uploadedCoverFile.size > 5 * 1024 * 1024) {
+          return;
+        }
+
+        console.log('upload cover', this.uploadedCoverFile);
+        this.uploadCoverPhoto();
       }
     }
   }
@@ -77,16 +111,37 @@ export class ProfileComponent implements OnInit {
 
         if (res.data && res.data.photo) {
           this.profileDetails.photo = res.data.photo;
-        }
 
-        const userData = JSON.parse(localStorage.getItem('userData')!);
-        if (userData) {
-          userData.photo = res.data.photo || this.profileDetails.photo;
-          localStorage.setItem('userData', JSON.stringify(userData));
+          const userData = JSON.parse(localStorage.getItem('userData')!);
+          if (userData) {
+            userData.photo = res.data.photo;
+            localStorage.setItem('userData', JSON.stringify(userData));
+          }
         }
       },
       error: (err) => {
         this.isUploading = false;
+      },
+    });
+  }
+
+  uploadCoverPhoto() {
+    if (!this.uploadedCoverFile) {
+      return;
+    }
+
+    this.isUploadingCover = true;
+
+    this.authService.uploadCoverPhoto(this.uploadedCoverFile).subscribe({
+      next: (res) => {
+        this.isUploadingCover = false;
+
+        if (res.data && res.data.cover) {
+          this.profileDetails.cover = res.data.cover;
+        }
+      },
+      error: (err) => {
+        this.isUploadingCover = false;
       },
     });
   }

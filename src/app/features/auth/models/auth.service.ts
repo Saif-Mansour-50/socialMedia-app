@@ -36,8 +36,15 @@ export class AuthService {
   // auth.service.ts
   uploadProfilePhoto(file: File): Observable<any> {
     const formData = new FormData();
-    formData.append('photo', file); // تأكد من اسم الحقل كما هو متوقع في الـ API
+    formData.append('photo', file);
 
     return this.httpClient.put(environment.baseUrl + `/users/upload-photo`, formData);
+  }
+
+  uploadCoverPhoto(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('cover', file);
+
+    return this.httpClient.put(environment.baseUrl + `/users/upload-cover`, formData);
   }
 }
