@@ -72,13 +72,16 @@ export class PostCardComponent implements OnInit {
   }
 
   savePost(postId: string): void {
+    this.isLoading.set(true);
     this.postsService.savePost(postId).subscribe({
       next: (res) => {
         console.log('Post saved:', res);
-        this.openDropdownId.set(null);
+        this.getNewPosts.emit();
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error saving post:', err);
+        this.isLoading.set(false);
       },
     });
   }
@@ -86,7 +89,6 @@ export class PostCardComponent implements OnInit {
   editPost(postId: string): void {
     this.editingPostId.set(postId);
     this.editingContent.set(this.post().body || '');
-    this.openDropdownId.set(null);
   }
 
   saveEdit(postId: string, privacy?: string): void {

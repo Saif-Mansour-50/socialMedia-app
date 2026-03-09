@@ -1,26 +1,25 @@
 <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
-  <!-- Post Header -->
   <div class="flex items-center justify-between p-4">
     <div class="flex items-center gap-3">
       <img
-        [src]="post().user?.photo || 'assets/default-avatar.png'"
-        [alt]="post().user?.name || 'User'"
+        [src]="post().user.photo || 'assets/default-avatar.png'"
+        [alt]="post().user.name || 'User'"
         class="w-10 h-10 rounded-full object-cover"
       />
       <div>
         <h3 class="font-semibold text-gray-800">
-          {{ post().user?.name || 'Unknown User' }}
+          {{ post().user.name || 'Unknown User' }}
         </h3>
         <p class="text-sm text-gray-500">
           {{ post().timeAgo }}
         </p>
       </div>
-      @if (post().user?._id === userId) {
+      @if (post().user._id === userId) {
         <div
           class="p-0 w-fit items-center bg-neutral-secondary-medium text-heading text-sm rounded-base"
         >
           <select
-            [disabled]="post().user?._id !== userId"
+            [disabled]="post().user._id !== userId"
             class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
           >
             <option [value]="'public'" [selected]="post().privacy === 'public'">public</option>
@@ -33,7 +32,6 @@
       }
     </div>
 
-    <!-- Dropdown Menu -->
     <div class="relative inline-block text-left" #dropdownContainer>
       <button
         (click)="toggleDropdown($event, post()._id)"
@@ -52,16 +50,20 @@
                 (click)="savePost(post()._id)"
                 class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
               >
-                @if (post().bookmarked) {
-                  <i class="fa-solid fa-bookmark text-blue-600"></i>
+                @if (!isLoading()) {
+                  @if (post().bookmarked == true) {
+                    <i class="fa-solid fa-bookmark"></i>
+                  } @else {
+                    <i class="fa-regular fa-bookmark"></i>
+                  }
+                  <span>Save post</span>
                 } @else {
-                  <i class="fa-regular fa-bookmark"></i>
+                  <span><i class="fa fa-spin fa-spinner"></i> Loading...</span>
                 }
-                Save post
               </button>
             </li>
 
-            @if (post().user?._id === userId) {
+            @if (post().user._id === userId) {
               <li>
                 <button
                   (click)="editPost(post()._id)"
@@ -86,16 +88,15 @@
     </div>
   </div>
 
-  <!-- Post Content -->
   <div class="px-4 pb-3">
     @if (editingPostId() === post()._id) {
-      <!-- Edit Mode -->
+      >
       <div class="space-y-2">
         <textarea
           #editTextarea
           [value]="editingContent()"
           (input)="editingContent.set(editTextarea.value)"
-          class="w-full p-3 border-2 border-blue-400 rounded-lg focus:ring-2 focus:ring-blue-500 min-h-[120px] transition resize-y"
+          class="w-full p-3 border-2 border-blue-400 rounded-lg focus:ring-2 focus:ring-blue-500 min-h-20 transition resize-y"
           rows="4"
           placeholder="Edit your post..."
           (keydown.ctrl.enter)="saveEdit(post()._id)"
@@ -120,12 +121,10 @@
         </div>
       </div>
     } @else {
-      <!-- View Mode -->
       <p class="text-gray-700">{{ post().body }}</p>
     }
   </div>
 
-  <!-- Post Image -->
   @if (post().image) {
     <div class="w-full cursor-pointer">
       <img
@@ -137,7 +136,6 @@
     </div>
   }
 
-  <!-- Post Stats -->
   <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500 border-t">
     <span>{{ post().likesCount || 0 }} likes</span>
     <div class="flex gap-4">
@@ -152,7 +150,6 @@
     </div>
   </div>
 
-  <!-- Action Buttons -->
   <div class="grid grid-cols-3 border-t text-sm">
     <button
       (click)="likePost(post()._id)"
@@ -160,7 +157,7 @@
       [disabled]="isLoading()"
     >
       @if (!isLoading()) {
-        @if (post().likes?.includes(userId)) {
+        @if (post().likes.includes(userId)) {
           <span><i class="fa-solid fa-thumbs-up text-blue-600"></i> Liked</span>
         } @else {
           <span><i class="fa-regular fa-thumbs-up"></i> Like</span>
@@ -185,14 +182,12 @@
     </button>
   </div>
 
-  <!-- Comments Section -->
   @if (showCommentsForPost() === post()._id) {
     <div class="p-4 border-t bg-gray-50">
       <app-comments [postId]="post()._id"></app-comments>
     </div>
   }
 
-  <!-- Comment Form -->
   <form (submit)="createComment($event, post()._id)" class="border-t">
     <label for="chat-{{ post()._id }}" class="sr-only">Your message</label>
     <div class="flex items-center px-3 py-2 rounded-base bg-neutral-secondary-soft">
@@ -229,7 +224,6 @@
       </button>
     </div>
 
-    <!-- Image Preview -->
     @if (imagePreviewForPost() === post()._id && imagePreview) {
       <div class="relative my-4 group px-3">
         <img
@@ -247,7 +241,6 @@
       </div>
     }
 
-    <!-- Comment Tools -->
     <div
       class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-3 pb-3"
     >
@@ -294,7 +287,6 @@
   </form>
 </div>
 
-<!-- Image Modal -->
 @if (isModalOpen()) {
   <div
     class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
