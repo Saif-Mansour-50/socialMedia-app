@@ -1,1 +1,9 @@
-<div class="col-span-1 lg:col-span-6 space-y-6">test</div>
+@if (postList.length > 0) {
+  @for (postData of postList; track postData._id) {
+    <app-post-card [post]="postData" (getNewPosts)="refreshPosts()" />
+  }
+} @else {
+  <p class="mt-6 bg-white rounded-2xl border border-slate-200 p-10 text-center text-slate-500">
+    You have not posted yet.
+  </p>
+}

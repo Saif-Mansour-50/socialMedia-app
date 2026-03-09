@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { PostsService } from '../../models/posts.service';
 import { Ipost } from '../../models/Ipost/ipost.interface';
+import { PostCardComponent } from '../../components/post-card/post-card.component';
 
 @Component({
   selector: 'app-saved',
-  imports: [],
+  imports: [PostCardComponent],
   templateUrl: './saved.component.html',
   styleUrl: './saved.component.css',
 })
@@ -16,20 +17,18 @@ export class SavedComponent {
   userId: string = '';
 
   ngOnInit(): void {
-    this.userId = JSON.parse(localStorage.getItem('userData')!)._id;
-    this.profilePost();
+    this.savedPost();
   }
 
   refreshPosts(): void {
     console.log('Refreshing posts...');
-    this.profilePost();
+    this.savedPost();
   }
 
-  profilePost() {
-    this.postsService.savePost(this.userId).subscribe({
+  savedPost() {
+    this.postsService.getsavePost().subscribe({
       next: (res) => {
-        this.postList = res.data.posts;
-        console.log('my prosts saved', this.postList);
+        this.postList = res.data.bookmarks;
       },
       error: (err) => {
         console.log(err);

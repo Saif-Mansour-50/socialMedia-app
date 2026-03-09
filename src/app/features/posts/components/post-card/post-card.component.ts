@@ -35,6 +35,12 @@ export class PostCardComponent implements OnInit {
   editingContent = signal<string>('');
   isModalOpen = signal<boolean>(false);
   isLoading = signal<boolean>(false);
+  shareModalOpen = signal<boolean>(false);
+  shareContent = signal<string>('');
+  sharedPost = signal<Ipost | null>(null);
+  shareLoading = signal<boolean>(false);
+
+  // body: FormControl = new FormControl('', Validators.minLength(3));
 
   commentControls = new Map<string, FormControl>();
 
@@ -75,8 +81,22 @@ export class PostCardComponent implements OnInit {
     this.isLoading.set(true);
     this.postsService.savePost(postId).subscribe({
       next: (res) => {
-        console.log('Post saved:', res);
+        // console.log('Post saved:', res);
         this.getNewPosts.emit();
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Error saving post:', err);
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  getSavePost(postId: string): void {
+    this.isLoading.set(true);
+    this.postsService.savePost(postId).subscribe({
+      next: (res) => {
+        console.log('Posts zzzzz saved:', res);
         this.isLoading.set(false);
       },
       error: (err) => {
@@ -153,14 +173,37 @@ export class PostCardComponent implements OnInit {
     this.showCommentsForPost.set(this.showCommentsForPost() === postId ? null : postId);
   }
 
-  sharePost(postId: string): void {
-    this.authService.sharePost(postId).subscribe({
+  openShareModal(post: Ipost): void {
+    this.sharedPost.set(post);
+    this.shareContent.set('');
+    this.shareModalOpen.set(true);
+  }
+
+  closeShareModal(): void {
+    this.shareModalOpen.set(false);
+    this.sharedPost.set(null);
+    this.shareContent.set('');
+  }
+
+  submitShare(postId: string): void {
+    this.shareLoading.set(true);
+
+    const shareData = {
+      body: this.shareContent(),
+      originalPostId: postId,
+    };
+    console.log(this);
+
+    this.postsService.sharePost(shareData, postId).subscribe({
       next: (res) => {
         console.log('Post shared:', res);
         this.getNewPosts.emit();
+        this.closeShareModal();
+        this.shareLoading.set(false);
       },
       error: (err) => {
         console.error('Error sharing post:', err);
+        this.shareLoading.set(false);
       },
     });
   }
