@@ -10,7 +10,7 @@
         <div class="flex gap-3 mt-4">
           <button
             routerLinkActive="bg-blue-600"
-            class="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium"
+            class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
           >
             All
           </button>
@@ -31,18 +31,100 @@
     </div>
 
     <div class="p-6">
-      @for (item of notList; track $index) {
-        <div class="flex justify-between mb-2 bg-blue-100 p-3 rounded-xl">
-          <div class="flex items-center gap-2.5">
-            <img class="w-10 h-10 rounded-full" [src]="item.actor.photo" alt="" />
-            <div class="font-medium text-heading">
-              <div>{{ item.actor.name }}</div>
-              <div class="text-sm font-normal text-body">{{ item.entity.body }}</div>
+      @if (isLoading) {
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading ...</span>
+          </div>
+        </div>
+      }
+
+      @if (!isLoading) {
+        @for (item of notList; track item._id) {
+          <div
+            [routerLink]="['/details', item.entity._id]"
+            class="flex justify-between mb-2 bg-blue-100 p-3 rounded-xl cursor-pointer hover:bg-blue-200 transition"
+          >
+            <div class="flex items-center gap-2.5">
+              <img class="w-10 h-10 rounded-full" [src]="item.actor.photo" alt="" />
+              <div class="font-medium text-heading">
+                <div>{{ item.actor.name }}</div>
+                <div class="text-sm font-normal text-body">{{ item.entity.body }}</div>
+              </div>
+            </div>
+            <div>
+              <span class="text-sm text-gray-600">
+                {{ item.createdAt | date: 'short' }}
+              </span>
             </div>
           </div>
-          <div>
-            <span> {{ item.createdAt }} </span>
-          </div>
+        } @empty {
+          <div class="text-center py-8 text-gray-500">You have not posted yet.</div>
+        }
+      }
+
+      @if (numberOfPages > 1 && !isLoading) {
+        <div class="flex justify-center items-center gap-2 mt-6">
+          <button
+            (click)="prevPage()"
+            [disabled]="currentPage === 1"
+            class="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+          >
+            &leftarrow;
+          </button>
+
+          @if (numberOfPages <= 5) {
+            @for (page of [].constructor(numberOfPages); track $index) {
+              <button
+                (click)="goToPage($index + 1)"
+                [class.bg-blue-500]="currentPage === $index + 1"
+                [class.text-white]="currentPage === $index + 1"
+                class="px-3 py-1 rounded border hover:bg-gray-100"
+              >
+                {{ $index + 1 }}
+              </button>
+            }
+          } @else {
+            @if (currentPage > 2) {
+              <button (click)="goToPage(1)" class="px-3 py-1 rounded border hover:bg-gray-100">
+                1
+              </button>
+              @if (currentPage > 3) {
+                <span class="px-2">...</span>
+              }
+            }
+
+            @for (page of getVisiblePages(); track page) {
+              <button
+                (click)="goToPage(page)"
+                [class.bg-blue-500]="currentPage === page"
+                [class.text-white]="currentPage === page"
+                class="px-3 py-1 rounded border hover:bg-gray-100"
+              >
+                {{ page }}
+              </button>
+            }
+
+            @if (currentPage < numberOfPages - 1) {
+              @if (currentPage < numberOfPages - 2) {
+                <span class="px-2">...</span>
+              }
+              <button
+                (click)="goToPage(numberOfPages)"
+                class="px-3 py-1 rounded border hover:bg-gray-100"
+              >
+                {{ numberOfPages }}
+              </button>
+            }
+          }
+
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage === numberOfPages"
+            class="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+          >
+            &rightarrow;
+          </button>
         </div>
       }
     </div>

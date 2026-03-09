@@ -8,6 +8,7 @@ export interface Notification {
   isRead: boolean;
   createdAt: string;
   entity: Entity;
+  timeAgo?: string;
 }
 
 interface Entity {
