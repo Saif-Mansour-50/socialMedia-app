@@ -20,15 +20,38 @@
         <div class="flex items-center gap-6 flex-1">
           <div class="relative">
             <img
-              [src]="profileDetails.photo"
+              [src]="profileDetails.photo || 'assets/default-avatar.png'"
               [alt]="profileDetails.name"
               class="w-32 h-32 rounded-full border-4 border-white shadow-md object-cover"
             />
+
+            <div class="absolute bottom-0 end-0">
+              <input
+                (change)="onFileSelected($event)"
+                id="photoInput"
+                type="file"
+                hidden
+                accept="image/*"
+                [disabled]="isUploading"
+              />
+              <label
+                for="photoInput"
+                class="cursor-pointer inline-block bg-slate-800/70 hover:bg-slate-900/80 text-white p-2 rounded-lg backdrop-blur transition"
+                [class.opacity-50]="isUploading"
+                [class.cursor-not-allowed]="isUploading"
+              >
+                @if (!isUploading) {
+                  <i class="fa-regular fa-image text-xl"></i>
+                } @else {
+                  <i class="fa-solid fa-spinner fa-spin text-xl"></i>
+                }
+              </label>
+            </div>
           </div>
 
           <div>
             <h1 class="text-3xl font-bold text-slate-800">{{ profileDetails.name }}</h1>
-            <p class="text-slate-400 text-lg">@</p>
+            <p class="text-slate-400 text-lg">@{{ profileDetails.username }}</p>
 
             <span
               class="inline-flex items-center gap-2 bg-blue-100 text-blue-600 text-sm px-4 py-1 rounded-full mt-3"
@@ -42,7 +65,9 @@
         <div class="grid grid-cols-3 gap-4 w-full lg:w-auto">
           <div class="stat-box border border-gray-300 bg-white p-4 rounded-2xl">
             <p class="stat-title text-gray-500 font-semibold">FOLLOWERS</p>
-            <p class="stat-number text-center font-bold">0</p>
+            <p class="stat-number text-center font-bold">
+              {{ profileDetails.followersCount || 0 }}
+            </p>
           </div>
 
           <div class="stat-box border border-gray-300 bg-white p-4 rounded-2xl">
@@ -79,12 +104,12 @@
         <div class="space-y-6">
           <div class="side-box border border-gray-300 bg-white p-4 rounded-2xl">
             <p class="side- text-blue-600">MY POSTS</p>
-            <p class="side-number">0</p>
+            <p class="side-number text-2xl font-bold">{{ postList.length }}</p>
           </div>
 
           <div class="side-box border border-gray-300 bg-white p-4 rounded-2xl">
             <p class="side-title text-blue-600">SAVED POSTS</p>
-            <p class="side-number">0</p>
+            <p class="side-number text-2xl font-bold">{{ profileDetails.bookmarksCount || 0 }}</p>
           </div>
         </div>
       </div>
@@ -117,7 +142,6 @@
     @if (postList.length > 0) {
       @for (post of postList; track $index) {
         <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
-          <!-- post header -->
           <div class="flex items-center justify-between p-4">
             <div class="flex items-center gap-3">
               <img

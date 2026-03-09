@@ -1,25 +1,29 @@
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../features/auth/models/auth.service';
 import { Ipost } from '../../features/posts/models/Ipost/ipost.interface';
 import { PostsService } from '../../features/posts/models/posts.service';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, input } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
   private readonly postsService = inject(PostsService);
+  private readonly authService = inject(AuthService);
 
   profileDetails: MyProfile = {} as MyProfile;
-
   postList: Ipost[] = [];
-
   userId: string = '';
+  uploadedFile!: File;
+  isUploading: boolean = false;
+
+  body: FormControl = new FormControl();
 
   ngOnInit(): void {
     this.myProfileData();
-
     this.userId = JSON.parse(localStorage.getItem('userData')!)._id;
     this.profilePost();
   }
@@ -46,6 +50,54 @@ export class ProfileComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+
+  onFileSelected(e: Event) {
+    if (e.target) {
+      let input = e.target as HTMLInputElement;
+      if (input.files && input.files.length > 0) {
+        this.uploadedFile = input.files[0];
+
+        console.log('upload', this.uploadedFile);
+        this.uploadProfilePhoto();
+      }
+    }
+  }
+
+  uploadProfilePhoto() {
+    if (!this.uploadedFile) {
+      return;
+    }
+
+    this.isUploading = true;
+
+    this.authService.uploadProfilePhoto(this.uploadedFile).subscribe({
+      next: (res) => {
+        this.isUploading = false;
+
+        if (res.data && res.data.photo) {
+          this.profileDetails.photo = res.data.photo;
+        }
+
+        const userData = JSON.parse(localStorage.getItem('userData')!);
+        if (userData) {
+          userData.photo = res.data.photo || this.profileDetails.photo;
+          localStorage.setItem('userData', JSON.stringify(userData));
+        }
+      },
+      error: (err) => {
+        this.isUploading = false;
+      },
+    });
+  }
+
+  previewImage(e: Event) {
+    const input = e.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {};
+      reader.readAsDataURL(input.files[0]);
+    }
   }
 }
 

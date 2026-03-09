@@ -32,4 +32,12 @@ export class AuthService {
   sharePost(postId: any): Observable<any> {
     return this.httpClient.post(environment.baseUrl + `/posts/${postId}/share`, null);
   }
+
+  // auth.service.ts
+  uploadProfilePhoto(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('photo', file); // تأكد من اسم الحقل كما هو متوقع في الـ API
+
+    return this.httpClient.put(environment.baseUrl + `/users/upload-photo`, formData);
+  }
 }
