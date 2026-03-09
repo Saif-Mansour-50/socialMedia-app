@@ -12,4 +12,8 @@ export class NotificationsService {
   getNotifications(): Observable<any> {
     return this.httpClient.get(environment.baseUrl + '/notifications?unread=false&page=1&limit=10');
   }
+
+  GetUnreadCount(): Observable<any> {
+    return this.httpClient.get(environment.baseUrl + `/notifications/unread-count`);
+  }
 }

@@ -8,13 +8,17 @@
         </p>
 
         <div class="flex gap-3 mt-4">
-          <button class="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium">
+          <button
+            routerLinkActive="bg-blue-600"
+            class="px-4 py-2 rounded-full bg-blue-600 text-white text-sm font-medium"
+          >
             All
           </button>
           <button
+            routerLinkActive="bg-blue-600"
             class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
           >
-            Unread
+            Unread <span class="size-2.5 bg-light text-blue-600 ms-2"> {{ UnreadCount }} </span>
           </button>
         </div>
       </div>
@@ -27,9 +31,6 @@
     </div>
 
     <div class="p-6">
-      <!-- <div class="border border-gray-200 bg-gray-50 rounded-xl py-10 text-center text-gray-500">
-        No notifications yet.
-      </div> -->
       @for (item of notList; track $index) {
         <div class="flex justify-between mb-2 bg-blue-100 p-3 rounded-xl">
           <div class="flex items-center gap-2.5">
