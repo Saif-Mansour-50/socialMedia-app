@@ -28,7 +28,7 @@ export class NotificationsComponent implements OnInit {
   ngOnInit(): void {
     this.getNotifications();
     this.GetUnreadCount();
-    // this.markNotificationAsRead();
+    this.markNotificationAsRead();
   }
 
   getNotifications(page: number = 1) {
@@ -45,6 +45,18 @@ export class NotificationsComponent implements OnInit {
       error: (err) => {
         console.log(err);
         this.isLoading = false;
+      },
+    });
+  }
+
+  markNotificationAsRead() {
+    this.notificationsService.markNotificationAsRead(this.notificationId).subscribe({
+      next: (res) => {
+        console.log(res);
+        console.log('markNotificationAsRead', res);
+      },
+      error: (err) => {
+        console.log(err);
       },
     });
   }
@@ -102,14 +114,4 @@ export class NotificationsComponent implements OnInit {
 
     return visiblePages;
   }
-  // markNotificationAsRead() {
-  //   this.notificationsService.markNotificationAsRead(this.notificationId).subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //     },
-  //   });
-  // }
 }

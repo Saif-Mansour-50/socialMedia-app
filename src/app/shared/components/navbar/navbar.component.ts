@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 
 import { AuthService } from '../../../features/auth/models/auth.service';
 import { User } from '../../../features/posts/models/Icomment/icomment.interface';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,8 @@ export class NavbarComponent implements OnInit {
   userData!: User;
 
   ngOnInit(): void {
+    initFlowbite();
+
     const user = localStorage.getItem('userData');
 
     if (user) {

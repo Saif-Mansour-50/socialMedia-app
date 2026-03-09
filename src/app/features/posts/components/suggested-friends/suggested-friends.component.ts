@@ -19,7 +19,7 @@ export class SuggestedFriendsComponent implements OnInit {
 
   searchTerm = '';
 
-  showFriends: boolean = false;
+  showFriends: boolean = true;
 
   suggestedFriendsList: SuggestedFriends[] = [];
 
