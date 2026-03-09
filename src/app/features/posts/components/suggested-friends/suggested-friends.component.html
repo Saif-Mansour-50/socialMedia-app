@@ -3,10 +3,23 @@
     <h2 class="font-semibold text-gray-700">
       <i class="fa-solid fa-user-group text-blue-500"></i> Suggested Friends
     </h2>
-    <span class="text-sm bg-gray-100 px-2 py-1 rounded-full">6</span>
+    <div class="flex items-center gap-2">
+      <span class="text-sm bg-gray-100 px-2 py-1 rounded-full">6</span>
+      <button
+        (click)="showFriends = !showFriends"
+        class="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+      >
+        {{ showFriends ? 'Hide' : 'Show' }}
+        <i
+          class="fa-solid"
+          [class.fa-chevron-up]="showFriends"
+          [class.fa-chevron-down]="!showFriends"
+        ></i>
+      </button>
+    </div>
   </div>
 
-  <form class="flex items-center max-w-sm mx-auto space-x-2">
+  <form class="flex items-center max-w-sm mx-auto space-x-2 mb-4">
     <label for="simple-search" class="sr-only">Search</label>
     <div class="relative w-full text-gray-400">
       <div class="absolute inset-y-0 left-0 flex items-center ps-3 pointer-events-none">
@@ -24,39 +37,43 @@
     </div>
   </form>
 
-  @for (friend of suggestedFriendsList | searchFriends: searchTerm; track friend._id) {
-    <div class="my-2">
-      <div class="flex items-center justify-between mb-4 p-2 border border-gray-200 rounded-2xl">
-        <div class="flex items-center gap-3">
-          <img [src]="friend.photo" class="w-10 h-10 rounded-full object-cover" />
+  @if (showFriends) {
+    <div class="flex flex-col gap-2">
+      @for (friend of suggestedFriendsList | searchFriends: searchTerm; track friend._id) {
+        <div class="my-2">
+          <div class="flex items-center justify-between p-2 border border-gray-200 rounded-2xl">
+            <div class="flex items-center gap-3">
+              <img [src]="friend.photo" class="w-10 h-10 rounded-full object-cover" />
 
-          <div>
-            <h4 class="text-sm font-semibold text-gray-700">{{ friend.name }}</h4>
+              <div>
+                <h4 class="text-sm font-semibold text-gray-700">{{ friend.name }}</h4>
 
-            <span
-              class="bg-brand-softer text-xs text-gray-400 font-medium px-1.5 py-0.5 rounded p-0.5"
-              >{{ friend.followersCount }} followers</span
+                <span
+                  class="bg-brand-softer text-xs text-gray-400 font-medium px-1.5 py-0.5 rounded p-0.5"
+                  >{{ friend.followersCount }} followers</span
+                >
+              </div>
+            </div>
+
+            <button
+              (click)="followFriend(friend._id)"
+              [disabled]="isLoading && currentid === friend._id"
+              class="text-xs px-3 py-2 bg-blue-100 text-blue-600 rounded-full flex items-center gap-1"
+              [class.cursor-not-allowed]="isLoading && currentid === friend._id"
+              [class.cursor-pointer]="!(isLoading && currentid === friend._id)"
+              [class.hover:bg-blue-200]="!(isLoading && currentid === friend._id)"
             >
+              @if (isLoading && currentid === friend._id) {
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Follow
+              } @else {
+                <i class="fa-solid fa-user-plus text-blue-500"></i>
+                Follow
+              }
+            </button>
           </div>
         </div>
-
-        <button
-          (click)="followFriend(friend._id)"
-          [disabled]="isLoading && currentid === friend._id"
-          class="text-xs px-3 py-2 bg-blue-100 text-blue-600 rounded-full flex items-center gap-1"
-          [class.cursor-not-allowed]="isLoading && currentid === friend._id"
-          [class.cursor-pointer]="!(isLoading && currentid === friend._id)"
-          [class.hover:bg-blue-200]="!(isLoading && currentid === friend._id)"
-        >
-          @if (isLoading && currentid === friend._id) {
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            Follow
-          } @else {
-            <i class="fa-solid fa-user-plus text-blue-500"></i>
-            Follow
-          }
-        </button>
-      </div>
+      }
     </div>
   }
 </div>
