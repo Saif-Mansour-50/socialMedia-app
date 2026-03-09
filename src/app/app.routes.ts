@@ -2,55 +2,111 @@ import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth/auth-guard';
 import { notAuth } from './core/guards/noAuth/no-auth-guard';
-import { HomeComponent } from './features/posts/pages/home/home.component';
-import { NotfoundComponent } from './pages/notfound/notfound.component';
-import { NotificationsComponent } from './features/notification/pages/notifications/notifications.component';
-import { PostDetailsComponent } from './features/posts/pages/post-details/post-details.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { BlankLayoutComponent } from './layouts/blank-layout/blank-layout.component';
-import { MyPostsComponent } from './features/posts/pages/my-posts/my-posts.component';
-import { CommunityComponent } from './features/posts/pages/community/community.component';
-import { SavedComponent } from './features/posts/pages/saved/saved.component';
-import { DetailsComponent } from './features/posts/pages/details/details.component';
-import { ChangePasswordComponent } from './features/auth/pages/change-password/change-password.component';
-import { LoginComponent } from './features/auth/pages/login/login.component';
-import { RegisterComponent } from './features/auth/pages/register/register.component';
-import { FeedComponent } from './features/posts/pages/feed/feed.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  // Auth Layout - غير مسجل دخول
   {
     path: '',
-    component: AuthLayoutComponent,
+    loadComponent: () =>
+      import('./layouts/auth-layout/auth-layout.component').then((c) => c.AuthLayoutComponent),
     canActivate: [notAuth],
     children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/auth/pages/login/login.component').then((c) => c.LoginComponent),
+      },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('./features/auth/pages/register/register.component').then(
+            (c) => c.RegisterComponent,
+          ),
+      },
     ],
   },
+
+  // Blank Layout - مسجل دخول
   {
     path: '',
-    component: BlankLayoutComponent,
+    loadComponent: () =>
+      import('./layouts/blank-layout/blank-layout.component').then((c) => c.BlankLayoutComponent),
     canActivate: [authGuard],
     children: [
       {
         path: 'home',
-        component: HomeComponent,
+        loadComponent: () =>
+          import('./features/posts/pages/home/home.component').then((c) => c.HomeComponent),
         children: [
           { path: '', redirectTo: 'feed', pathMatch: 'full' },
-          { path: 'feed', component: FeedComponent },
-          { path: 'community', component: CommunityComponent },
-          { path: 'my-posts', component: MyPostsComponent },
-          { path: 'saved', component: SavedComponent },
+          {
+            path: 'feed',
+            loadComponent: () =>
+              import('./features/posts/pages/feed/feed.component').then((c) => c.FeedComponent),
+          },
+          {
+            path: 'community',
+            loadComponent: () =>
+              import('./features/posts/pages/community/community.component').then(
+                (c) => c.CommunityComponent,
+              ),
+          },
+          {
+            path: 'my-posts',
+            loadComponent: () =>
+              import('./features/posts/pages/my-posts/my-posts.component').then(
+                (c) => c.MyPostsComponent,
+              ),
+          },
+          {
+            path: 'saved',
+            loadComponent: () =>
+              import('./features/posts/pages/saved/saved.component').then((c) => c.SavedComponent),
+          },
         ],
       },
-      { path: 'post-details/:id', component: PostDetailsComponent },
-      { path: 'notifications', component: NotificationsComponent },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'details/:id', component: DetailsComponent },
-      { path: 'changePassword', component: ChangePasswordComponent },
+      {
+        path: 'post-details/:id',
+        loadComponent: () =>
+          import('./features/posts/pages/post-details/post-details.component').then(
+            (c) => c.PostDetailsComponent,
+          ),
+      },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notification/pages/notifications/notifications.component').then(
+            (c) => c.NotificationsComponent,
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./pages/profile/profile.component').then((c) => c.ProfileComponent),
+      },
+      {
+        path: 'details/:id',
+        loadComponent: () =>
+          import('./features/posts/pages/details/details.component').then(
+            (c) => c.DetailsComponent,
+          ),
+      },
+      {
+        path: 'changePassword',
+        loadComponent: () =>
+          import('./features/auth/pages/change-password/change-password.component').then(
+            (c) => c.ChangePasswordComponent,
+          ),
+      },
     ],
   },
-  { path: '**', component: NotfoundComponent },
+
+  // Not Found - 404
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/notfound/notfound.component').then((c) => c.NotfoundComponent),
+  },
 ];
