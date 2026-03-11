@@ -11,10 +11,18 @@ import { CommentsService } from '../../models/comments.service';
 import { PostsService } from '../../models/posts.service';
 
 import { Ipost } from '../../models/Ipost/ipost.interface';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-post-card',
-  imports: [ReactiveFormsModule, RouterLink, CommentsComponent, PickerComponent, FormsModule],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    CommentsComponent,
+    PickerComponent,
+    FormsModule,
+    DatePipe,
+  ],
   templateUrl: './post-card.component.html',
 })
 export class PostCardComponent implements OnInit {
@@ -185,18 +193,32 @@ export class PostCardComponent implements OnInit {
     this.shareContent.set('');
   }
 
-  submitShare(postId: string): void {
+  body: FormControl = new FormControl('', [Validators.minLength(3)]);
+
+  submitShare(postId: string, event: any): void {
+    event.preventDefault();
+
     this.shareLoading.set(true);
 
-    const shareData = {
-      body: this.shareContent(),
-      originalPostId: postId,
-    };
+    console.log('postid', postId, this.body.value);
+
+    const shareText = this.body.value?.trim();
+
+    let object;
+
+    if (!shareText) {
+      object = null;
+    } else {
+      object = {
+        body: shareText,
+      };
+    }
     console.log(this);
 
-    this.postsService.sharePost(shareData, postId).subscribe({
+    this.postsService.sharePost(object, postId).subscribe({
       next: (res) => {
         console.log('Post shared:', res);
+        console.log('Post content:', object);
         this.getNewPosts.emit();
         this.closeShareModal();
         this.shareLoading.set(false);

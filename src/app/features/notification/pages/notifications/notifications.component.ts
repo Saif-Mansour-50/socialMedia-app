@@ -28,7 +28,8 @@ export class NotificationsComponent implements OnInit {
   ngOnInit(): void {
     this.getNotifications();
     this.GetUnreadCount();
-    this.markNotificationAsRead();
+    // this.markNotificationAsRead();
+    // this.markAllAsRead()
   }
 
   getNotifications(page: number = 1) {
@@ -40,6 +41,7 @@ export class NotificationsComponent implements OnInit {
         this.totalItems = res.meta.pagination.total;
         this.numberOfPages = res.meta.pagination.numberOfPages;
         console.log('getNotifications', res);
+        // this.notificationId = res.data.notifications._id;
         this.isLoading = false;
       },
       error: (err) => {
@@ -49,17 +51,44 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  markNotificationAsRead() {
-    this.notificationsService.markNotificationAsRead(this.notificationId).subscribe({
+  GetUnreadCount() {
+    this.notificationsService.GetUnreadCount().subscribe({
       next: (res) => {
-        console.log(res);
-        console.log('markNotificationAsRead', res);
+        this.UnreadCount = res.data.unreadCount;
+
+        console.log('GetUnreadCount', res);
       },
       error: (err) => {
         console.log(err);
       },
     });
   }
+
+  markNotificationAsRead(notificationId: string) {
+    this.notificationsService.markNotificationAsRead(notificationId).subscribe({
+      next: (res) => {
+        console.log(res);
+        console.log('markNotificationAsRead', res);
+        this.GetUnreadCount();
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  // markAllAsRead(id: string) {
+  //   this.notificationsService.markAllAsRead(id).subscribe({
+  //     next: (res) => {
+  //       console.log(res);
+  //       console.log('markAllAsRead', res);
+  //       this.GetUnreadCount();
+  //     },
+  //     error: (err) => {
+  //       console.log(err);
+  //     },
+  //   });
+  // }
 
   nextPage() {
     if (this.currentPage < this.numberOfPages) {
@@ -77,17 +106,6 @@ export class NotificationsComponent implements OnInit {
     if (page >= 1 && page <= this.numberOfPages) {
       this.getNotifications(page);
     }
-  }
-
-  GetUnreadCount() {
-    this.notificationsService.GetUnreadCount().subscribe({
-      next: (res) => {
-        this.UnreadCount = res.data.unreadCount;
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
   }
 
   getVisiblePages(): number[] {

@@ -24,6 +24,7 @@
       </div>
 
       <button
+        (click)="markNotificationAsRead(notificationId)"
         class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
       >
         ✔ Mark all as read
@@ -42,14 +43,23 @@
       @if (!isLoading) {
         @for (item of notList; track item._id) {
           <div
-            [routerLink]="['/details', item.entity._id]"
             class="flex justify-between mb-2 bg-blue-100 p-3 rounded-xl cursor-pointer hover:bg-blue-200 transition"
           >
             <div class="flex items-center gap-2.5">
-              <img class="w-10 h-10 rounded-full" [src]="item.actor.photo" alt="" />
-              <div class="font-medium text-heading">
-                <div>{{ item.actor.name }}</div>
-                <div class="text-sm font-normal text-body">{{ item.entity.body }}</div>
+              <div>
+                <div [routerLink]="['/details', item.entity._id]" class="flex gap-2 mb-1.5">
+                  <img class="w-10 h-10 rounded-full" [src]="item.actor.photo" alt="" />
+                  <div class="font-medium text-heading">
+                    <div>{{ item.actor.name }}</div>
+                    <div class="text-sm font-normal text-body">{{ item.entity.body }}</div>
+                  </div>
+                </div>
+                <button
+                  (click)="markNotificationAsRead(item._id)"
+                  class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition cursor-pointer"
+                >
+                  ✔ read
+                </button>
               </div>
             </div>
             <div>

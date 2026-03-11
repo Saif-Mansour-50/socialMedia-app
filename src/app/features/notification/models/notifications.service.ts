@@ -17,6 +17,9 @@ export class NotificationsService {
     return this.httpClient.get(environment.baseUrl + `/notifications/unread-count`);
   }
   markNotificationAsRead(notificationId: any): Observable<any> {
-    return this.httpClient.get(environment.baseUrl + `/notifications/${notificationId}/read`);
+    return this.httpClient.patch(environment.baseUrl + `/notifications/${notificationId}/read`, {});
+  }
+  markAllAsRead(notificationId: any): Observable<any> {
+    return this.httpClient.patch(environment.baseUrl + `/notifications/read-all`, {});
   }
 }

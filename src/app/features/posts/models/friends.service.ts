@@ -10,7 +10,11 @@ export class FriendsService {
   private readonly httpClient = inject(HttpClient);
 
   getFrindesSuggestition(): Observable<any> {
-    return this.httpClient.get(environment.baseUrl + '/users/suggestions?limit=6');
+    return this.httpClient.get(environment.baseUrl + '/users/suggestions?limit=5');
+  }
+
+  getAllSuggestedFriends(): Observable<any> {
+    return this.httpClient.get(environment.baseUrl + '/users/suggestions?limite=all');
   }
 
   followFriend(id: string): Observable<any> {

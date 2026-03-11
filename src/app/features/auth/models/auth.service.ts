@@ -29,8 +29,8 @@ export class AuthService {
     return this.httpClient.patch(environment.baseUrl + '/users/change-password', data);
   }
 
-  sharePost(postId: any): Observable<any> {
-    return this.httpClient.post(environment.baseUrl + `/posts/${postId}/share`, null);
+  sharePost(body: any, postId: any): Observable<any> {
+    return this.httpClient.post(environment.baseUrl + `/posts/${postId}/share`, body);
   }
 
   // auth.service.ts

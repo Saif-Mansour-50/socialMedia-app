@@ -17,17 +17,19 @@ export class PostsService {
   postList = signal<Ipost[]>([]);
 
   getAllPosts() {
-    return this.httpClient.get<any>(`${environment.baseUrl}/posts`).subscribe({
-      next: (res) => {
-        const response = res.data.posts.map((post: Ipost) => ({
-          ...post,
-          timeAgo: this.getTimeAgo(post.createdAt),
-        }));
+    return this.httpClient
+      .get<any>(`${environment.baseUrl}/posts/feed?only=following&limit?`)
+      .subscribe({
+        next: (res) => {
+          const response = res.data.posts.map((post: Ipost) => ({
+            ...post,
+            timeAgo: this.getTimeAgo(post.createdAt),
+          }));
 
-        this.postList.set(response);
-        this.isLoading.set(false);
-      },
-    });
+          this.postList.set(response);
+          this.isLoading.set(false);
+        },
+      });
   }
 
   createPost(data: FormData) {
@@ -68,7 +70,7 @@ export class PostsService {
   }
 
   getUserPost(userId: any): Observable<any> {
-    return this.httpClient.get(`${environment.baseUrl}/posts/feed?only=following&limit?`);
+    return this.httpClient.get(`${environment.baseUrl}/posts/feed?only=me&limit?`);
   }
 
   likePost(postId: any): Observable<any> {

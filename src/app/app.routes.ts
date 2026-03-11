@@ -1,3 +1,4 @@
+import { AllFriendsComponent } from './features/posts/components/all-friends/all-friends.component';
 import { Routes } from '@angular/router';
 
 import { authGuard } from './core/guards/auth/auth-guard';
@@ -91,6 +92,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/posts/pages/details/details.component').then(
             (c) => c.DetailsComponent,
+          ),
+      },
+      {
+        path: 'all-friends',
+        loadComponent: () =>
+          import('./features/posts/components/all-friends/all-friends.component').then(
+            (c) => c.AllFriendsComponent,
           ),
       },
       {
