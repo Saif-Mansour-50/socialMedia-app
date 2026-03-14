@@ -1,63 +1,37 @@
 <nav class="bg-neutral-primary w-full z-20 top-0 start-0 border-b border-default fixed">
-  <div class="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
-    <a routerLink="/home" class="flex items-center space-x-3 rtl:space-x-reverse">
+  <div
+    class="max-w-7xl flex flex-wrap items-center justify-between mx-auto px-4 sm:px-6 lg:px-8 py-3"
+  >
+    <a routerLink="/home" class="flex items-center gap-2">
       <img width="40" height="20" class="rounded-2xl" src="images/route.png" alt="Logo" />
-      <span class="self-center text-xl text-sky-600 font-bold whitespace-nowrap">Route Posts</span>
+      <span class="text-xl text-sky-600 font-bold whitespace-nowrap">Route Posts</span>
     </a>
-    <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+
+    <div class="flex items-center gap-2 md:order-2">
       <button
         id="user-menu-button"
         data-dropdown-toggle="user-dropdown"
         data-dropdown-placement="bottom-end"
         type="button"
-        class="flex items-center gap-3 px-4 py-2 bg-[#f8fafc] hover:bg-[#eef2f7] text-gray-800 text-sm font-medium rounded-full shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-400/30 cursor-pointer"
+        class="flex items-center gap-2 px-3 py-1.5 bg-[#f8fafc] hover:bg-[#eef2f7] text-gray-800 text-sm font-medium rounded-full shadow-sm transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-400/30 cursor-pointer"
       >
-        <img class="w-8 h-8 rounded-full object-cover" [src]="userData.photo" alt="user photo" />
-
-        <span>{{ userData.name }} </span>
-
-        <i class="fa-solid fa-bars text-xs opacity-70"></i>
+        <img class="w-7 h-7 rounded-full object-cover" [src]="userData.photo" alt="user photo" />
+        <span class="hidden sm:inline">{{ userData.name }}</span>
+        <i class="fa-solid fa-bars text-xs opacity-70 ml-1"></i>
       </button>
 
-      <div
-        class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44"
-        id="user-dropdown"
-      >
-        <ul class="p-2 text-sm text-body font-medium" aria-labelledby="user-menu-button">
-          <li>
-            <a
-              routerLink="profile"
-              class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
-              ><i class="fa-regular fa-user"></i>profile</a
-            >
-          </li>
-          <li>
-            <a
-              routerLink="/changePassword"
-              routerLinkActive="bg-neutral-tertiary-medium text-heading rounded"
-              class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
-              ><i class="fa-solid fa-gear"></i>settings</a
-            >
-          </li>
-        </ul>
-        <div class="px-4 py-3 text-sm border-t border-default cursor-pointer">
-          <span (click)="logout()" class="block text-red-700 font-medium">logout</span>
-        </div>
-      </div>
       <button
         data-collapse-toggle="navbar-user"
         type="button"
-        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base md:hidden hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-neutral-tertiary"
+        class="inline-flex items-center p-2 w-9 h-9 justify-center text-sm text-body rounded-lg md:hidden hover:bg-neutral-secondary-soft hover:text-heading focus:outline-none focus:ring-2 focus:ring-neutral-tertiary"
         aria-controls="navbar-user"
         aria-expanded="false"
       >
         <span class="sr-only">Open main menu</span>
         <svg
-          class="w-6 h-6"
+          class="w-5 h-5"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
           fill="none"
           viewBox="0 0 24 24"
         >
@@ -69,41 +43,70 @@
           />
         </svg>
       </button>
+
+      <div
+        class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44"
+        id="user-dropdown"
+      >
+        <ul class="p-1.5 text-sm text-body font-medium" aria-labelledby="user-menu-button">
+          <li>
+            <a
+              routerLink="profile"
+              class="flex items-center gap-2 w-full px-3 py-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+            >
+              <i class="fa-regular fa-user w-4"></i>Profile
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/changePassword"
+              routerLinkActive="bg-neutral-tertiary-medium text-heading"
+              class="flex items-center gap-2 w-full px-3 py-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded"
+            >
+              <i class="fa-solid fa-gear w-4"></i>Settings
+            </a>
+          </li>
+        </ul>
+        <div class="px-3 py-2 text-sm border-t border-default cursor-pointer">
+          <span (click)="logout()" class="block text-red-700 font-medium hover:text-red-800"
+            >Logout</span
+          >
+        </div>
+      </div>
     </div>
+
     <div
       class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
       id="navbar-user"
     >
-      <ul class="flex gap-2 md:bg-neutral-secondary-medium border-gray-300 border rounded-xl">
+      <ul class="flex gap-1 md:bg-neutral-secondary-medium border-gray-300 border rounded-lg p-1">
         <li>
           <a
             routerLink="home"
             routerLinkActive="bg-white !text-blue-700 shadow-sm"
-            class="inline-flex items-center font-bold gap-2 w-full px-3 py-2 rounded transition-all duration-200 text-gray-600 hover:bg-neutral-tertiary-medium hover:text-black"
+            class="flex items-center font-medium gap-2 px-4 py-2 rounded-md transition-all duration-200 text-gray-600 hover:bg-neutral-tertiary-medium hover:text-black"
           >
             <i class="fa-regular fa-house"></i>
             Feed
           </a>
         </li>
-
         <li>
           <a
             routerLink="profile"
             routerLinkActive="bg-white !text-blue-700 shadow-sm"
-            class="inline-flex items-center font-bold gap-2 w-full px-3 py-2 rounded transition-all duration-200 text-gray-600 hover:bg-neutral-tertiary-medium hover:text-heading"
+            class="flex items-center font-medium gap-2 px-4 py-2 rounded-md transition-all duration-200 text-gray-600 hover:bg-neutral-tertiary-medium hover:text-heading"
           >
             <i class="fa-regular fa-user"></i>
             Profile
           </a>
         </li>
-
         <li>
           <a
             routerLink="notifications"
             routerLinkActive="bg-white !text-blue-700 shadow-sm"
-            class="inline-flex items-center font-bold gap-2 w-full px-3 py-2 rounded transition-all duration-200 text-gray-600 hover:bg-neutral-tertiary-medium hover:text-black"
+            class="flex items-center font-medium gap-2 px-4 py-2 rounded-md transition-all duration-200 text-gray-600 hover:bg-neutral-tertiary-medium hover:text-black"
           >
-            <i class="fa-regular fa-comment"></i>
+            <i class="fa-regular fa-bell"></i>
             Notifications
           </a>
         </li>

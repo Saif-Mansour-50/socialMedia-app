@@ -12,12 +12,11 @@
             routerLink="/notifications"
             routerLinkActive="bg-blue-600 text-white"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
+            class="px-4 py-2 rounded-full text-gray-900 text-sm font-medium hover:bg-gray-500 transition"
           >
             All
           </button>
           <button
-            routerLink="/notifications/unread"
             routerLinkActive="bg-blue-600 text-white"
             class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
           >
@@ -66,7 +65,7 @@
                       {{ getNotificationMessage(item) }}
                     </span>
                   </div>
-                  @if (item.entity?.body) {
+                  @if (item.entity.body) {
                     <div class="text-sm text-gray-500 mt-1">"{{ item.entity.body }}"</div>
                   }
                 </div>

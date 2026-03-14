@@ -1,17 +1,18 @@
-<div class="bg-gray-100 p-4 lg:p-6 order-1 mt-17.5">
-  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
-    <aside class="lg:col-span-2">
-      <app-aside-feed></app-aside-feed>
-    </aside>
+<div class="bg-gray-100 min-h-screen pt-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <aside class="lg:col-span-2 order-1">
+        <app-aside-feed></app-aside-feed>
+      </aside>
 
-    <div class="col-span-1 lg:col-span-6 space-y-6 order-3">
-      <app-creat-post (getNewPosts)="getAllPosts()"></app-creat-post>
+      <main class="lg:col-span-7 xl:col-span-6 space-y-6 order-3 lg:order-2">
+        <app-creat-post (getNewPosts)="getAllPosts()"></app-creat-post>
+        <router-outlet />
+      </main>
 
-      <router-outlet />
+      <aside class="lg:col-span-3 xl:col-span-4 order-2 lg:order-3">
+        <app-suggested-friends></app-suggested-friends>
+      </aside>
     </div>
-
-    <aside class="col-span-1 lg:col-span-3 lg:order-4 order-2">
-      <app-suggested-friends></app-suggested-friends>
-    </aside>
   </div>
 </div>

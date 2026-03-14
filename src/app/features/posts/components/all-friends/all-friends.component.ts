@@ -32,7 +32,7 @@ export class AllFriendsComponent implements OnInit {
     this.friendsService.getAllSuggestedFriends().subscribe({
       next: (res) => {
         this.allSuggestedFriends = res.data.suggestions;
-        console.log('all frie', res);
+
         this.isLoadingAll = false;
       },
       error: (err) => {
