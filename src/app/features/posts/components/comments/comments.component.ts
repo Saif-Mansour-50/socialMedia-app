@@ -19,7 +19,9 @@ export class CommentsComponent implements OnInit {
   @Output() upDateComment: EventEmitter<any> = new EventEmitter();
 
   commentList: Icomment[] = [];
+  replyList: Icomment[] = [];
   isLoading = signal<boolean>(false);
+  isLoadingR = signal<boolean>(false);
   LikeTheam = signal<string | null>(null);
   openDropdownId = signal<string | null>(null);
   commentControls = new Map<string, FormControl>();
@@ -30,6 +32,8 @@ export class CommentsComponent implements OnInit {
   userId: string = '';
   isModalOpen = signal<boolean>(false);
   selectedImage = signal<string | null>(null);
+  replyMap = new Map<string, Icomment[]>();
+  replyLikes = new Map<string, boolean>();
 
   editingCommentId = signal<string | null>(null);
   editContent = new FormControl('', [Validators.required]);
@@ -105,6 +109,22 @@ export class CommentsComponent implements OnInit {
       error: (err) => {
         console.log(err);
         this.isLoading.set(false);
+      },
+    });
+  }
+
+  likereplay(postId: string, replyId: string): void {
+    this.isLoadingR.set(true);
+    this.commentsService.likecomment(postId, replyId).subscribe({
+      next: (res) => {
+        this.upDateComment.emit();
+        this.isLoadingR.set(false);
+
+        this.replyLikes.set(replyId, res.data.liked);
+      },
+      error: (err) => {
+        console.log(err);
+        this.isLoadingR.set(false);
       },
     });
   }
@@ -218,6 +238,9 @@ export class CommentsComponent implements OnInit {
             control.reset();
             this.removeImage();
             this.upDateComment.emit();
+            console.log('replay', res);
+            let Replies = this.replyMap.get(commentId) || [];
+            this.replyMap.set(commentId, [...Replies, res.data.reply]);
           }
         },
         error: (err) => {
