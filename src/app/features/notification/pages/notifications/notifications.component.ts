@@ -1,12 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { NotificationsService } from '../../models/notifications.service';
 import { Notification } from '../../models/notification.interface';
-import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
+import { RouterLinkActive, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-notifications',
-  imports: [RouterLinkActive, RouterLinkWithHref, DatePipe],
+
+  imports: [RouterLinkActive, RouterLink, DatePipe],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
 })
@@ -21,15 +22,11 @@ export class NotificationsComponent implements OnInit {
   numberOfPages: number = 0;
   isLoading: boolean = false;
 
-  UnreadCount: string = '';
-
-  notificationId: string = '';
+  UnreadCount: number = 0;
 
   ngOnInit(): void {
     this.getNotifications();
-    this.GetUnreadCount();
-    // this.markNotificationAsRead();
-    // this.markAllAsRead()
+    this.getUnreadCount();
   }
 
   getNotifications(page: number = 1) {
@@ -40,23 +37,22 @@ export class NotificationsComponent implements OnInit {
         this.currentPage = res.meta.pagination.currentPage;
         this.totalItems = res.meta.pagination.total;
         this.numberOfPages = res.meta.pagination.numberOfPages;
-
         this.isLoading = false;
       },
       error: (err) => {
-        console.log(err);
+        console.log('Error fetching notifications:', err);
         this.isLoading = false;
       },
     });
   }
 
-  GetUnreadCount() {
+  getUnreadCount() {
     this.notificationsService.GetUnreadCount().subscribe({
       next: (res) => {
         this.UnreadCount = res.data.unreadCount;
       },
       error: (err) => {
-        console.log(err);
+        console.log('Error fetching unread count:', err);
       },
     });
   }
@@ -64,10 +60,24 @@ export class NotificationsComponent implements OnInit {
   markNotificationAsRead(notificationId: string) {
     this.notificationsService.markNotificationAsRead(notificationId).subscribe({
       next: (res) => {
-        this.GetUnreadCount();
+        this.getUnreadCount();
+
+        this.getNotifications(this.currentPage);
       },
       error: (err) => {
-        console.log(err);
+        console.log('Error marking notification as read:', err);
+      },
+    });
+  }
+
+  markAllAsRead() {
+    this.notificationsService.markAllAsRead().subscribe({
+      next: (res) => {
+        this.getUnreadCount();
+        this.getNotifications(this.currentPage);
+      },
+      error: (err) => {
+        console.log('Error marking all as read:', err);
       },
     });
   }
@@ -113,5 +123,15 @@ export class NotificationsComponent implements OnInit {
     }
 
     return visiblePages;
+  }
+
+  getNotificationMessage(notification: Notification): string {
+    switch (notification.type) {
+      case 'like':
+        return 'liked your post';
+
+      default:
+        return 'interacted with your post';
+    }
   }
 }

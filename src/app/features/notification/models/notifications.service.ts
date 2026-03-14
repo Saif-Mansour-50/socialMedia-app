@@ -19,7 +19,7 @@ export class NotificationsService {
   markNotificationAsRead(notificationId: any): Observable<any> {
     return this.httpClient.patch(environment.baseUrl + `/notifications/${notificationId}/read`, {});
   }
-  markAllAsRead(notificationId: any): Observable<any> {
+  markAllAsRead(): Observable<any> {
     return this.httpClient.patch(environment.baseUrl + `/notifications/read-all`, {});
   }
 }

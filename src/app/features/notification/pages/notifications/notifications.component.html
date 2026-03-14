@@ -9,23 +9,31 @@
 
         <div class="flex gap-3 mt-4">
           <button
-            routerLinkActive="bg-blue-600"
+            routerLink="/notifications"
+            routerLinkActive="bg-blue-600 text-white"
+            [routerLinkActiveOptions]="{ exact: true }"
             class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
           >
             All
           </button>
           <button
-            routerLinkActive="bg-blue-600"
+            routerLink="/notifications/unread"
+            routerLinkActive="bg-blue-600 text-white"
             class="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition"
           >
-            Unread <span class="size-2.5 bg-light text-blue-600 ms-2"> {{ UnreadCount }} </span>
+            Unread
+            @if (UnreadCount > 0) {
+              <span class="ml-2 px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full">
+                {{ UnreadCount }}
+              </span>
+            }
           </button>
         </div>
       </div>
 
       <button
-        (click)="markNotificationAsRead(notificationId)"
-        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+        (click)="markAllAsRead()"
+        class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition cursor-pointer"
       >
         ✔ Mark all as read
       </button>
@@ -34,108 +42,55 @@
     <div class="p-6">
       @if (isLoading) {
         <div class="text-center py-4">
-          <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading ...</span>
-          </div>
+          <div
+            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"
+          ></div>
+          <p class="mt-2 text-gray-600">Loading...</p>
         </div>
       }
 
       @if (!isLoading) {
         @for (item of notList; track item._id) {
           <div
-            class="flex justify-between mb-2 bg-blue-100 p-3 rounded-xl cursor-pointer hover:bg-blue-200 transition"
+            class="flex justify-between mb-2 p-3 rounded-xl cursor-pointer hover:bg-blue-50 transition"
+            [class.bg-blue-50]="!item.isRead"
+            [class.bg-white]="item.isRead"
           >
-            <div class="flex items-center gap-2.5">
-              <div>
-                <div [routerLink]="['/details', item.entity._id]" class="flex gap-2 mb-1.5">
-                  <img class="w-10 h-10 rounded-full" [src]="item.actor.photo" alt="" />
-                  <div class="font-medium text-heading">
-                    <div>{{ item.actor.name }}</div>
-                    <div class="text-sm font-normal text-body">{{ item.entity.body }}</div>
+            <div class="flex items-center gap-2.5 flex-1">
+              <img class="w-10 h-10 rounded-full" [src]="item.actor.photo" alt="" />
+              <div class="flex-1">
+                <div [routerLink]="['/details']" class="flex flex-col mb-1.5">
+                  <div class="font-medium text-gray-900">
+                    {{ item.actor.name }}
+                    <span class="text-sm font-normal text-gray-600">
+                      {{ getNotificationMessage(item) }}
+                    </span>
                   </div>
+                  @if (item.entity?.body) {
+                    <div class="text-sm text-gray-500 mt-1">"{{ item.entity.body }}"</div>
+                  }
                 </div>
-                <button
-                  (click)="markNotificationAsRead(item._id)"
-                  class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition cursor-pointer"
-                >
-                  ✔ read
-                </button>
+
+                @if (!item.isRead) {
+                  <button
+                    (click)="markNotificationAsRead(item._id)"
+                    class="mt-2 px-3 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-lg hover:bg-blue-200 transition"
+                  >
+                    read
+                  </button>
+                }
               </div>
             </div>
-            <div>
-              <span class="text-sm text-gray-600">
+
+            <div class="flex flex-col items-end ml-4">
+              <span class="text-xs text-gray-500 whitespace-nowrap">
                 {{ item.createdAt | date: 'short' }}
               </span>
             </div>
           </div>
         } @empty {
-          <div class="text-center py-8 text-gray-500">You have not posted yet.</div>
+          <div class="text-center py-8 text-gray-500">No notifications yet.</div>
         }
-      }
-
-      @if (numberOfPages > 1 && !isLoading) {
-        <div class="flex justify-center items-center gap-2 mt-6">
-          <button
-            (click)="prevPage()"
-            [disabled]="currentPage === 1"
-            class="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-          >
-            &leftarrow;
-          </button>
-
-          @if (numberOfPages <= 5) {
-            @for (page of [].constructor(numberOfPages); track $index) {
-              <button
-                (click)="goToPage($index + 1)"
-                [class.bg-blue-500]="currentPage === $index + 1"
-                [class.text-white]="currentPage === $index + 1"
-                class="px-3 py-1 rounded border hover:bg-gray-100"
-              >
-                {{ $index + 1 }}
-              </button>
-            }
-          } @else {
-            @if (currentPage > 2) {
-              <button (click)="goToPage(1)" class="px-3 py-1 rounded border hover:bg-gray-100">
-                1
-              </button>
-              @if (currentPage > 3) {
-                <span class="px-2">...</span>
-              }
-            }
-
-            @for (page of getVisiblePages(); track page) {
-              <button
-                (click)="goToPage(page)"
-                [class.bg-blue-500]="currentPage === page"
-                [class.text-white]="currentPage === page"
-                class="px-3 py-1 rounded border hover:bg-gray-100"
-              >
-                {{ page }}
-              </button>
-            }
-
-            @if (currentPage < numberOfPages - 1) {
-              @if (currentPage < numberOfPages - 2) {
-                <span class="px-2">...</span>
-              }
-              <button
-                (click)="goToPage(numberOfPages)"
-                class="px-3 py-1 rounded border hover:bg-gray-100"
-              >
-                {{ numberOfPages }}
-              </button>
-            }
-          }
-
-          <button
-            (click)="nextPage()"
-            [disabled]="currentPage === numberOfPages"
-            class="px-3 py-1 rounded border disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
-          >
-            &rightarrow;
-          </button>
-        </div>
       }
     </div>
   </div>
