@@ -63,7 +63,6 @@ export class HomeComponent implements OnInit {
     this.currentid = id;
     this.friendsService.followFriend(id).subscribe({
       next: (res) => {
-        console.log(res);
         this.getSuggested();
       },
       error: (err) => {

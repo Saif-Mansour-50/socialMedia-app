@@ -27,7 +27,6 @@ export class DetailsComponent implements OnInit {
   getPostDetails(): void {
     this.postsService.getSinglePost(this.postId).subscribe({
       next: (res) => {
-        console.log(res);
         this.postDetails = res.data.post;
       },
       error: (err) => {
