@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -19,6 +19,8 @@ import { AuthService } from '../../models/auth.service';
 export class ChangePasswordComponent {
   private readonly authService = inject(AuthService);
 
+  message = signal<string | null>(null);
+
   changePasswordForm = new FormGroup(
     {
       password: new FormControl('', [Validators.required]),
@@ -38,9 +40,16 @@ export class ChangePasswordComponent {
       this.authService.changePassword(passwordData).subscribe({
         next: (res) => {
           console.log('changePass', res);
+
+          this.message.set(res.message);
+
+          setTimeout(() => {
+            this.message.set(null);
+          }, 5000);
         },
         error: (err) => {
           console.log('erorrrrPasss', err);
+          this.message.set(err.error?.message || err.message || 'An error occurred');
         },
       });
     }
