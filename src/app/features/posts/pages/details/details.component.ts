@@ -15,11 +15,10 @@ export class DetailsComponent implements OnInit {
 
   postId: string = '';
 
-  postDetails: Ipost = {} as Ipost;
+  postDetails: Ipost | null = null;
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((param) => {
-      console.log(param.get('id'));
       this.postId = param.get('id')!;
       this.getPostDetails();
     });

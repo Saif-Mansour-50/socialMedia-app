@@ -1,132 +1,136 @@
-<div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
-  <div class="flex items-center justify-between p-4">
-    <div class="flex items-center gap-3">
-      <img
-        [src]="postDetails.user.photo"
-        [alt]="postDetails.user.name"
-        class="w-10 h-10 rounded-full object-cover"
-      />
-      <div>
-        <h3 class="font-semibold text-gray-800">
-          {{ postDetails.user.name }}
-        </h3>
-        <p class="text-sm text-gray-500">
-          {{ postDetails.timeAgo }}
-        </p>
-      </div>
-      <div
-        class="p-0 w-fit items-center bg-neutral-secondary-medium text-heading text-sm rounded-base"
-      >
-        <select
-          class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
+@if (postDetails) {
+  <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden mb-5">
+    <div class="flex items-center justify-between p-4">
+      <div class="flex items-center gap-3">
+        <img
+          [src]="postDetails.user.photo"
+          [alt]="postDetails.user.name"
+          class="w-10 h-10 rounded-full object-cover"
+        />
+        <div>
+          <h3 class="font-semibold text-gray-800">
+            {{ postDetails.user.name }}
+          </h3>
+          <p class="text-sm text-gray-500">
+            {{ postDetails.timeAgo }}
+          </p>
+        </div>
+        <div
+          class="p-0 w-fit items-center bg-neutral-secondary-medium text-heading text-sm rounded-base"
         >
-          <option [selected]="postDetails.privacy === 'public'" value="public">public</option>
-          <option [selected]="postDetails.privacy === 'following'" value="following">
-            followers
-          </option>
-          <option [selected]="postDetails.privacy === 'only_me'" value="only_me">only me</option>
-        </select>
+          <select
+            class="border-none bg-transparent cursor-pointer right-0 py-0 px-5 text-xs rounded-full"
+          >
+            <option [selected]="postDetails.privacy === 'public'" value="public">public</option>
+            <option [selected]="postDetails.privacy === 'following'" value="following">
+              followers
+            </option>
+            <option [selected]="postDetails.privacy === 'only_me'" value="only_me">only me</option>
+          </select>
+        </div>
       </div>
-    </div>
 
-    <div class="relative inline-block text-left group">
-      <!-- Button -->
-      <button class="p-2 rounded-full hover:bg-gray-100 transition">
-        <i class="fa-solid fa-ellipsis"></i>
-      </button>
+      <div class="relative inline-block text-left group">
+        <!-- Button -->
+        <button class="p-2 rounded-full hover:bg-gray-100 transition">
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
 
-      <!-- Dropdown -->
-      <div
-        class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition cursor-pointer"
-      >
-        <ul class="py-2 text-sm">
-          <li>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
-              Save postDetails
-            </button>
-            <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
-              Edit post
-            </button>
-
-            <button class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer">
-              Delete post
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="px-4 pb-3">
-    <p class="text-gray-700">
-      {{ postDetails.body }}
-    </p>
-  </div>
-
-  <div class="w-full">
-    <img [src]="postDetails.image" class="w-full max-h-125 object-cover cursor-pointer" />
-  </div>
-
-  <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500 border-t">
-    <span>{{ postDetails.likesCount }} likes</span>
-    <div class="flex gap-4">
-      <span>{{ postDetails.sharesCount }} share</span>
-      <span>{{ postDetails.commentsCount }} comments</span>
-      <button
-        routerLink="/details"
-        class="font-semibold cursor-pointer text-blue-600 hover:underline"
-      >
-        view details
-      </button>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-3 border-t text-sm">
-    <button class="py-3 hover:bg-gray-100 font-medium text-gray-600">
-      <i class="fa-solid fa-thumbs-up"></i> Like
-    </button>
-
-    <button #showcomments class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer">
-      <i class="fa-regular fa-comment"></i> Comment
-    </button>
-
-    <button class="py-3 hover:bg-gray-100 font-medium text-gray-600">
-      <i class="fa-solid fa-share-nodes"></i> Share
-    </button>
-  </div>
-
-  <form>
-    <label for="chat" class="sr-only">Your message</label>
-    <div class="flex items-center px-3 py-2 rounded-base bg-neutral-secondary-soft">
-      <textarea
-        id="chat"
-        rows="1"
-        class="mx-4 bg-neutral-primary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 placeholder:text-body"
-        placeholder="Your message..."
-      ></textarea>
-      <button
-        type="submit"
-        class="inline-flex justify-center p-2 text-fg-brand rounded-full cursor-pointer hover:bg-brand-softer"
-      >
-        <svg
-          class="w-6 h-6 rotate-90 rtl:-rotate-90"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
+        <!-- Dropdown -->
+        <div
+          class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition cursor-pointer"
         >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m12 18-7 3 7-18 7 18-7-3Zm0 0v-5"
-          />
-        </svg>
-        <span class="sr-only">Send message</span>
+          <ul class="py-2 text-sm">
+            <li>
+              <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Save postDetails
+              </button>
+              <button class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Edit post
+              </button>
+
+              <button
+                class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 cursor-pointer"
+              >
+                Delete post
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-4 pb-3">
+      <p class="text-gray-700">
+        {{ postDetails.body }}
+      </p>
+    </div>
+
+    <div class="w-full">
+      <img [src]="postDetails.image" class="w-full max-h-125 object-cover cursor-pointer" />
+    </div>
+
+    <div class="flex justify-between items-center px-4 py-3 text-sm text-gray-500 border-t">
+      <span>{{ postDetails.likesCount }} likes</span>
+      <div class="flex gap-4">
+        <span>{{ postDetails.sharesCount }} share</span>
+        <span>{{ postDetails.commentsCount }} comments</span>
+        <button
+          routerLink="/details"
+          class="font-semibold cursor-pointer text-blue-600 hover:underline"
+        >
+          view details
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 border-t text-sm">
+      <button class="py-3 hover:bg-gray-100 font-medium text-gray-600">
+        <i class="fa-solid fa-thumbs-up"></i> Like
+      </button>
+
+      <button #showcomments class="py-3 hover:bg-gray-100 font-medium text-gray-600 cursor-pointer">
+        <i class="fa-regular fa-comment"></i> Comment
+      </button>
+
+      <button class="py-3 hover:bg-gray-100 font-medium text-gray-600">
+        <i class="fa-solid fa-share-nodes"></i> Share
       </button>
     </div>
-  </form>
-</div>
+
+    <form>
+      <label for="chat" class="sr-only">Your message</label>
+      <div class="flex items-center px-3 py-2 rounded-base bg-neutral-secondary-soft">
+        <textarea
+          id="chat"
+          rows="1"
+          class="mx-4 bg-neutral-primary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 placeholder:text-body"
+          placeholder="Your message..."
+        ></textarea>
+        <button
+          type="submit"
+          class="inline-flex justify-center p-2 text-fg-brand rounded-full cursor-pointer hover:bg-brand-softer"
+        >
+          <svg
+            class="w-6 h-6 rotate-90 rtl:-rotate-90"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m12 18-7 3 7-18 7 18-7-3Zm0 0v-5"
+            />
+          </svg>
+          <span class="sr-only">Send message</span>
+        </button>
+      </div>
+    </form>
+  </div>
+}
