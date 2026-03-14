@@ -48,7 +48,6 @@ export class RegisterComponent {
 
       this.authService.signup(this.registerForm.value).subscribe({
         next: (res) => {
-          console.log(res);
           this.router.navigate(['/login']);
           this.isLoading = false;
         },

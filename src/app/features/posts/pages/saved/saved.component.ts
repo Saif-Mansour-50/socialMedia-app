@@ -21,7 +21,6 @@ export class SavedComponent {
   }
 
   refreshPosts(): void {
-    console.log('Refreshing posts...');
     this.savedPost();
   }
 

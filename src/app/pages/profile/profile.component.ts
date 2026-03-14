@@ -37,7 +37,6 @@ export class ProfileComponent implements OnInit {
     this.postsService.getMyProfile().subscribe({
       next: (res) => {
         this.profileDetails = res.data.user;
-        console.log('profileDetails', this.profileDetails);
       },
       error: (err) => {
         console.log(err);
@@ -49,7 +48,6 @@ export class ProfileComponent implements OnInit {
     this.postsService.getUserPost(this.userId).subscribe({
       next: (res) => {
         this.postList = res.data.posts;
-        console.log('my prosts', this.postList);
       },
       error: (err) => {
         console.log(err);

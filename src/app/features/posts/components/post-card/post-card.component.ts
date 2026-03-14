@@ -233,7 +233,6 @@ export class PostCardComponent implements OnInit {
 
     this.postsService.likePost(postId).subscribe({
       next: (res) => {
-        console.log(res);
         this.getNewPosts.emit();
         this.isLoading.set(false);
       },
@@ -353,7 +352,6 @@ export class PostCardComponent implements OnInit {
             this.removeImage();
             this.getNewPosts.emit();
           }
-          console.log(res);
         },
         error: (err) => {
           console.error('Error creating comment:', err);

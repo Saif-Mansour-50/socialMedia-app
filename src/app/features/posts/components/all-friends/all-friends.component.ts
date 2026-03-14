@@ -51,7 +51,6 @@ export class AllFriendsComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
 
-        console.log(res);
         this.getAllSuggested();
       },
       error: (err) => {

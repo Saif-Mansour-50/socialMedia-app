@@ -26,7 +26,6 @@ export class MyPostsComponent implements OnInit {
     this.postsService.getUserPost(this.userId).subscribe({
       next: (res) => {
         this.postList = res.data.posts;
-        console.log('my prosts', this.postList);
       },
       error: (err) => {
         console.log(err);
@@ -34,7 +33,6 @@ export class MyPostsComponent implements OnInit {
     });
   }
   refreshPosts(): void {
-    console.log('Refreshing posts...');
     this.profilePost();
   }
 }

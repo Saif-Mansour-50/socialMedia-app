@@ -71,7 +71,6 @@ export class SuggestedFriendsComponent implements OnInit {
     this.currentid = id;
     this.friendsService.followFriend(id).subscribe({
       next: (res) => {
-        console.log(res);
         this.getSuggested();
         this.isLoading = false;
       },
