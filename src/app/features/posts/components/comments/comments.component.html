@@ -185,7 +185,7 @@
             [formControl]="getCommentControl(comment._id)"
             id="chat-{{ comment._id }}"
             rows="1"
-            class="bg-transparent border-0 focus:ring-0 block w-full px-3 py-2.5 placeholder:text-gray-500 resize-none"
+            class="bg-transparent border-0 focus:ring-0 block w-full px-3 py-2.5 placeholder:text-red-500"
             placeholder="Write a replay..."
           ></textarea>
           <button
@@ -273,6 +273,7 @@
             </div>
           </div>
           <p class="text-gray-600 pt-4">{{ reply.content }}</p>
+          <div><img [src]="reply.commentCreator.image" alt="" /></div>
           <div class="flex gap-2 mt-3">
             <button
               (click)="likereplay(reply.post, reply._id)"

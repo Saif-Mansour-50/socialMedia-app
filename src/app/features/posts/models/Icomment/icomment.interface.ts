@@ -15,6 +15,7 @@ interface CommentCreator {
   name: string;
   username: string;
   photo: string;
+  image: string;
 }
 
 export interface User {
