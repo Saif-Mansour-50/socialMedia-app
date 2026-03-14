@@ -18,4 +18,29 @@ export class CommentsService {
   createComment(data: FormData, postId: any): Observable<any> {
     return this.httpClient.post(`${environment.baseUrl}/posts/${postId}/comments`, data);
   }
+
+  likecomment(postId: string, commentId: string): Observable<any> {
+    return this.httpClient.put(
+      `${environment.baseUrl}/posts/${postId}/comments/${commentId}/like`,
+      {},
+    );
+  }
+
+  replayComment(postId: string, commentId: string, formData: FormData): Observable<any> {
+    return this.httpClient.post(
+      `${environment.baseUrl}/posts/${postId}/comments/${commentId}/replies`,
+      formData,
+    );
+  }
+
+  deleteComment(postId: string, commentId: string): Observable<any> {
+    return this.httpClient.delete(`${environment.baseUrl}/posts/${postId}/comments/${commentId}`);
+  }
+
+  editComment(postId: string, commentId: string, formData: FormData): Observable<any> {
+    return this.httpClient.put(
+      `${environment.baseUrl}/posts/${postId}/comments/${commentId}`,
+      formData,
+    );
+  }
 }

@@ -10,7 +10,7 @@ export interface Icomment {
   repliesCount: number;
 }
 
-export interface CommentCreator {
+interface CommentCreator {
   _id: string;
   name: string;
   username: string;

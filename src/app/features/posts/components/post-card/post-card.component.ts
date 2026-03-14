@@ -1,5 +1,15 @@
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, EventEmitter, inject, input, Output, signal, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  Output,
+  signal,
+  OnInit,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -12,6 +22,8 @@ import { PostsService } from '../../models/posts.service';
 
 import { Ipost } from '../../models/Ipost/ipost.interface';
 import { DatePipe } from '@angular/common';
+import { Modal } from 'flowbite';
+import { Likecout } from '../../models/likecount/likecout.interface';
 
 @Component({
   selector: 'app-post-card',
@@ -30,8 +42,6 @@ export class PostCardComponent implements OnInit {
   protected readonly postsService = inject(PostsService);
   private readonly authService = inject(AuthService);
 
-  @Output() getNewPosts: EventEmitter<any> = new EventEmitter();
-
   post = input.required<Ipost>();
 
   showCommentsForPost = signal<string | null>(null);
@@ -47,8 +57,11 @@ export class PostCardComponent implements OnInit {
   shareContent = signal<string>('');
   sharedPost = signal<Ipost | null>(null);
   shareLoading = signal<boolean>(false);
+  likesCurrenPage: number = 1;
 
   // body: FormControl = new FormControl('', Validators.minLength(3));
+
+  likesList: Likecout[] = [];
 
   commentControls = new Map<string, FormControl>();
 
@@ -56,8 +69,26 @@ export class PostCardComponent implements OnInit {
   imagePreview: string | null = null;
   uploadedFile: File | null = null;
 
+  openLikesModal(postId: any): void {
+    this.LikesModal.show();
+    this.getLikes(postId, this.likesCurrenPage);
+  }
+
+  closeLikesModal(): void {
+    this.LikesModal.hide();
+  }
+
   ngOnInit(): void {
     this.getUserId();
+  }
+
+  @ViewChild('likesModal') likesModalElement!: ElementRef;
+
+  @Output() getNewPosts: EventEmitter<any> = new EventEmitter();
+  private LikesModal!: Modal;
+
+  ngAfterViewInit(): void {
+    this.LikesModal = new Modal(this.likesModalElement.nativeElement);
   }
 
   toggleDropdown(event: MouseEvent, postId: string): void {
@@ -312,5 +343,17 @@ export class PostCardComponent implements OnInit {
   closeImageModal(): void {
     this.isModalOpen.set(false);
     this.selectedImage.set(null);
+  }
+
+  getLikes(postId: string, page: number) {
+    this.postsService.getPostLikes(postId, page).subscribe({
+      next: (res) => {
+        this.likesList = res.data.likes;
+        console.log(this.likesList);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
 }

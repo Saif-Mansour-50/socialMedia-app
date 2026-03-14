@@ -30,8 +30,6 @@ export class HomeComponent implements OnInit {
 
   private readonly friendsService = inject(FriendsService);
 
-  isLoading = false;
-
   currentid = '';
 
   searchTerm = '';
@@ -49,19 +47,14 @@ export class HomeComponent implements OnInit {
   }
 
   getSuggested() {
-    this.isLoading = true;
-
     this.friendsService.getFrindesSuggestition().subscribe({
       next: (res) => {
         console.log('friends', res);
 
         this.suggestedFriendsList = res.data.suggestions;
-        this.isLoading = false;
       },
       error: (err) => {
         console.log(err);
-
-        this.isLoading = false;
       },
     });
   }
@@ -75,7 +68,6 @@ export class HomeComponent implements OnInit {
       },
       error: (err) => {
         console.log(err);
-        this.isLoading = false;
       },
     });
   }

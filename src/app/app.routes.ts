@@ -7,7 +7,6 @@ import { notAuth } from './core/guards/noAuth/no-auth-guard';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  // Auth Layout - غير مسجل دخول
   {
     path: '',
     loadComponent: () =>
@@ -29,7 +28,6 @@ export const routes: Routes = [
     ],
   },
 
-  // Blank Layout - مسجل دخول
   {
     path: '',
     loadComponent: () =>

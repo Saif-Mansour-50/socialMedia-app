@@ -65,6 +65,12 @@ export class PostsService {
     return this.httpClient.delete(environment.baseUrl + `/posts/${postId}`);
   }
 
+  getPostLikes(postId: any, page: number = 1): Observable<any> {
+    return this.httpClient.get(
+      environment.baseUrl + `/posts/${postId}/likes?page=${page}&limit=10`,
+    );
+  }
+
   getMyProfile(): Observable<any> {
     return this.httpClient.get(`${environment.baseUrl}/users/profile-data`);
   }
