@@ -57,9 +57,10 @@ export class PostCardComponent implements OnInit {
   shareContent = signal<string>('');
   sharedPost = signal<Ipost | null>(null);
   shareLoading = signal<boolean>(false);
-  likesCurrenPage: number = 1;
 
-  // body: FormControl = new FormControl('', Validators.minLength(3));
+  editUploadedFile: File | null = null;
+  editImagePreview: string | null = null;
+  likesCurrenPage: number = 1;
 
   likesList: Likecout[] = [];
 
@@ -120,7 +121,6 @@ export class PostCardComponent implements OnInit {
     this.isLoading.set(true);
     this.postsService.savePost(postId).subscribe({
       next: (res) => {
-        // console.log('Post saved:', res);
         this.getNewPosts.emit();
         this.isLoading.set(false);
       },
@@ -145,26 +145,62 @@ export class PostCardComponent implements OnInit {
     });
   }
 
-  editPost(postId: string): void {
-    this.editingPostId.set(postId);
-    this.editingContent.set(this.post().body || '');
+  editPost(post: Ipost): void {
+    this.editingPostId.set(post._id);
+    this.editingContent.set(post.body || '');
+    this.editImagePreview = post.image || null;
+    this.editUploadedFile = null;
+    this.openDropdownId.set(null);
   }
 
-  saveEdit(postId: string, privacy?: string): void {
-    if (!this.editingContent().trim()) return;
+  onEditFileSelected(e: Event): void {
+    const input = e.target as HTMLInputElement;
 
-    const updateData: any = {
-      body: this.editingContent(),
-    };
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
 
-    if (privacy) {
-      updateData.privacy = privacy;
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      this.editUploadedFile = file;
+
+      if (this.editImagePreview && !this.editImagePreview.startsWith('http')) {
+        URL.revokeObjectURL(this.editImagePreview);
+      }
+
+      this.editImagePreview = URL.createObjectURL(file);
+    }
+  }
+
+  removeEditImage(): void {
+    if (this.editImagePreview && !this.editImagePreview.startsWith('http')) {
+      URL.revokeObjectURL(this.editImagePreview);
+    }
+    this.editImagePreview = null;
+    this.editUploadedFile = null;
+  }
+
+  saveEdit(postId: string): void {
+    if (!this.editingContent().trim() && !this.editUploadedFile) return;
+
+    const formData = new FormData();
+
+    if (this.editingContent().trim()) {
+      formData.append('body', this.editingContent());
     }
 
-    this.postsService.editPost(postId, updateData).subscribe({
+    if (this.editUploadedFile) {
+      formData.append('image', this.editUploadedFile);
+    }
+
+    this.postsService.editPost(postId, formData).subscribe({
       next: () => {
         this.editingPostId.set(null);
         this.editingContent.set('');
+        this.editImagePreview = null;
+        this.editUploadedFile = null;
         this.getNewPosts.emit();
       },
       error: (err) => {
@@ -228,28 +264,15 @@ export class PostCardComponent implements OnInit {
 
   submitShare(postId: string, event: any): void {
     event.preventDefault();
-
     this.shareLoading.set(true);
-
-    console.log('postid', postId, this.body.value);
 
     const shareText = this.body.value?.trim();
 
-    let object;
+    const shareData = shareText ? { body: shareText } : {};
 
-    if (!shareText) {
-      object = null;
-    } else {
-      object = {
-        body: shareText,
-      };
-    }
-    console.log(this);
-
-    this.postsService.sharePost(object, postId).subscribe({
+    this.postsService.sharePost(shareData, postId).subscribe({
       next: (res) => {
         console.log('Post shared:', res);
-        console.log('Post content:', object);
         this.getNewPosts.emit();
         this.closeShareModal();
         this.shareLoading.set(false);
@@ -304,7 +327,6 @@ export class PostCardComponent implements OnInit {
     }
   }
 
-  // comments section
   getCommentControl(postId: string) {
     if (!this.commentControls.has(postId)) {
       this.commentControls.set(postId, new FormControl('', [Validators.required]));

@@ -66,7 +66,7 @@
             @if (post().user._id === userId) {
               <li>
                 <button
-                  (click)="editPost(post()._id)"
+                  (click)="editPost(post())"
                   class="w-full text-left px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 >
                   Edit post
@@ -90,13 +90,12 @@
 
   <div class="px-4 pb-3">
     @if (editingPostId() === post()._id) {
-      >
-      <div class="space-y-2">
+      <div class="space-y-2 p-4 border-2 border-blue-400 rounded-lg bg-blue-50">
         <textarea
           #editTextarea
           [value]="editingContent()"
           (input)="editingContent.set(editTextarea.value)"
-          class="w-full p-3 border-2 border-blue-400 rounded-lg focus:ring-2 focus:ring-blue-500 min-h-20 transition resize-y"
+          class="w-full p-3 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 min-h-20 transition resize-y"
           rows="4"
           placeholder="Edit your post..."
           (keydown.ctrl.enter)="saveEdit(post()._id)"
@@ -104,20 +103,62 @@
           autofocus
         ></textarea>
 
-        <div class="flex gap-2 justify-end">
-          <button
-            (click)="cancelEdit()"
-            class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer"
-          >
-            Cancel
-          </button>
-          <button
-            (click)="saveEdit(post()._id)"
-            [disabled]="!editingContent().trim()"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 cursor-pointer disabled:cursor-not-allowed"
-          >
-            Save
-          </button>
+        @if (editImagePreview) {
+          <div class="relative mt-3 group">
+            <img
+              [src]="editImagePreview"
+              class="w-full max-h-80 object-cover rounded-xl border border-gray-200"
+              alt="Edit preview"
+            />
+            <button
+              type="button"
+              (click)="removeEditImage()"
+              class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 transition cursor-pointer"
+            >
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </div>
+        }
+
+        <div class="flex justify-between items-center mt-3">
+          <div class="flex gap-2">
+            <input
+              (change)="onEditFileSelected($event)"
+              id="editPhotoInput-{{ post()._id }}"
+              type="file"
+              hidden
+              accept="image/*"
+            />
+            <label
+              for="editPhotoInput-{{ post()._id }}"
+              class="flex items-center gap-2 hover:text-green-600 text-gray-700 px-3 py-2 rounded-xl cursor-pointer transition hover:bg-gray-100"
+            >
+              <i class="fa-regular fa-image text-xl"></i>
+              <span class="text-sm">
+                @if (post().image && !editUploadedFile) {
+                  Change image
+                } @else {
+                  Add image
+                }
+              </span>
+            </label>
+          </div>
+
+          <div class="flex gap-2">
+            <button
+              (click)="cancelEdit()"
+              class="px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              (click)="saveEdit(post()._id)"
+              [disabled]="!editingContent().trim() && !editUploadedFile"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 cursor-pointer disabled:cursor-not-allowed"
+            >
+              Save Changes
+            </button>
+          </div>
         </div>
       </div>
     } @else {
@@ -424,7 +465,6 @@
   </div>
 }
 
-<!-- Main modal -->
 <div
   #likesModal
   id="default-modal"
@@ -433,11 +473,9 @@
   class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
 >
   <div class="relative p-4 w-full max-w-2xl max-h-full">
-    <!-- Modal content -->
     <div
       class="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6"
     >
-      <!-- Modal header -->
       <div class="flex items-center justify-between border-b border-default pb-4 md:pb-5">
         <h3 class="text-lg font-medium text-heading">List Likes</h3>
         <button
@@ -466,7 +504,7 @@
           <span class="sr-only">Close modal</span>
         </button>
       </div>
-      <!-- Modal body -->
+
       <div class="space-y-4 md:space-y-6 py-4 md:py-6">
         @for (like of likesList; track like._id) {
           <div class="card border-2 border-gray-200 rounded-2xl my-3 p-4">
@@ -482,7 +520,7 @@
           </div>
         }
       </div>
-      <!-- Modal footer -->
+
       <div class="flex items-center border-t border-default space-x-4 pt-4 md:pt-5">
         <button
           (click)="getLikes(post()._id, likesCurrenPage + 1)"
